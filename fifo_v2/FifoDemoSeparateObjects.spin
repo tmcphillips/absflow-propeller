@@ -57,30 +57,30 @@ PUB println(s)
   term.NewLine
 
 PUB banner(s)
-  term.Str(string("--------------------",13))
+  term.Str(string("----------------------------",13))
   println(s)
-  term.Str(string("--------------------",13))
+  term.Str(string("----------------------------",13))
 
 
   
 pub dump(f)
-  term.Str(string("SEMID      = "))
+  term.Str(string("SEMID        = "))
   term.Dec(long[f][fifo#SEM_ID_OFFSET])
   term.NewLine
 
-  term.Str(string("DEPTH      = "))
+  term.Str(string("DEPTH        = "))
   term.Dec(long[f][fifo#DEPTH_OFFSET])
   term.NewLine
 
-  term.Str(string("OCCUPANCY  = "))
+  term.Str(string("OCCUPANCY    = "))
   term.Dec(long[f][fifo#OCCUPANCY_OFFSET])
   term.NewLine
 
-  term.Str(string("NEXT_WRITE = "))
+  term.Str(string("NEXT_WRITE   = "))
   term.Dec(long[f][fifo#NEXT_WRITE_OFFSET])
   term.NewLine
 
-  term.Str(string("NEXT_READ  = "))
+  term.Str(string("NEXT_READ    = "))
   term.Dec(long[f][fifo#NEXT_READ_OFFSET])
   term.NewLine
 
@@ -88,6 +88,6 @@ pub dump(f)
   term.Dec(long[f][fifo#BUFFER_START_OFFSET])
   term.NewLine
 
-  term.Str(string("BUFFER_END = "))
+  term.Str(string("BUFFER_END   = "))
   term.Dec(long[f][fifo#BUFFER_END_OFFSET])
   term.NewLine
