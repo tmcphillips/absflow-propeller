@@ -4,8 +4,8 @@ CON
   _clkmode = xtal1 + pll16x
   _xinfreq = 5_000_000
 
-  LOAD = 10
-  CAPACITY = 5
+  LOAD  = 100
+  DEPTH = 9
   
 OBJ
    
@@ -17,54 +17,77 @@ OBJ
 VAR
 
   long fifoStruct[fifo#STRUCT_SIZE]
-  long fifoBuffer[CAPACITY]
-  long rcvBuffer[LOAD]
+  long fifoBuffer[DEPTH]
+  long rcvBuffer[LOAD + 10]
 
 PUB Main | in, x, out
 
   term.Start(115_200)
   in := term.CharIn 
   term.clear
-  term.Str(string("Waiting for keystroke", 13))
 
-  fifo.Construct(@fifoStruct, @fifoBuffer, CAPACITY)
+  LONGFILL (@rcvBuffer, -1, LOAD)
+  
+  fifo.Initialize(@fifoStruct, @fifoBuffer, DEPTH)
+  banner(string("Initialized fifo"))
   dump(@fifoStruct)
-
-  term.Str(string("Starting sender", 13))
-  sndr.Start(@fifoStruct, LOAD)
-    
-  term.Str(string("Starting receiver", 13))
+  
   rcvr.Start(@fifoStruct, @rcvBuffer, LOAD)
+  sndr.Start(@fifoStruct, LOAD)
 
-  term.Str(string("Waiting 2 seconds", 13))
-  waitcnt(cnt + clkfreq * 2)
+  waitcnt(cnt + clkfreq)
 
-  term.Str(string("Dumping received data", 13))
-  repeat x from 0 to 9
+  rcvr.Stop
+  sndr.Stop
+  
+  banner(string("Reading receive buffer"))
+
+  repeat x from 0 to LOAD - 1
     term.Dec(long[@rcvBuffer][x])
     term.NewLine
  
+  banner(string("Printing final fifo state"))
   dump(@fifoStruct)   
   fifo.Destroy
 
+
+
+PUB println(s)
+  term.Str(s)
+  term.NewLine
+
+PUB banner(s)
+  term.Str(string("--------------------",13))
+  println(s)
+  term.Str(string("--------------------",13))
+
+
+  
 pub dump(f)
-  term.Str(string("SEMID    = "))
-  term.Dec(long[f][0])
+  term.Str(string("SEMID      = "))
+  term.Dec(long[f][fifo#SEM_ID_OFFSET])
   term.NewLine
 
-  term.Str(string("CAPACITY = "))
-  term.Dec(long[f][1])
+  term.Str(string("DEPTH      = "))
+  term.Dec(long[f][fifo#DEPTH_OFFSET])
   term.NewLine
 
-  term.Str(string("SIZE     = "))
-  term.Dec(long[f][2])
+  term.Str(string("OCCUPANCY  = "))
+  term.Dec(long[f][fifo#OCCUPANCY_OFFSET])
   term.NewLine
 
-  term.Str(string("HEAD     = "))
-  term.Dec(long[f][3])
+  term.Str(string("NEXT_WRITE = "))
+  term.Dec(long[f][fifo#NEXT_WRITE_OFFSET])
   term.NewLine
 
-  term.Str(string("TAIL     = "))
-  term.Dec(long[f][4])
+  term.Str(string("NEXT_READ  = "))
+  term.Dec(long[f][fifo#NEXT_READ_OFFSET])
   term.NewLine
 
+  term.Str(string("BUFFER_START = "))
+  term.Dec(long[f][fifo#BUFFER_START_OFFSET])
+  term.NewLine
+
+  term.Str(string("BUFFER_END = "))
+  term.Dec(long[f][fifo#BUFFER_END_OFFSET])
+  term.NewLine

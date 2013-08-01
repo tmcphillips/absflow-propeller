@@ -4,18 +4,20 @@ OBJ
  
 VAR
   byte cog
-  long stack[400]
-  long data
-  long count
+  long stack[50]
+  long buffer
   
-pub Start(fifoStruct, d, c) : success
+pub Start(fifoBase, bufferAddress, count) : success
+  stop
+  fifo.SetBaseAddress(fifoBase)
+  buffer := bufferAddress
+  success := (cog := cognew(ReceiveData(count), @stack) + 1)
 
-  fifo.Initialize(fifoStruct)
-  success := (cog := cognew(ReceiveData, @stack) + 1)
-  data := d
-  count := c
-  
+pub ReceiveData(count) | i
+  repeat i from 0 to count - 1 
+    long[buffer][i] := fifo.Take
+    waitcnt(cnt + clkfreq/(count + 1)) 
 
-pub ReceiveData | x, out
-  repeat x from 0 to count - 1
-    long[data][x] := fifo.Take
+pub Stop
+  if cog
+    cogstop(cog~ - 1)
