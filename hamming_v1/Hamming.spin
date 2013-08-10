@@ -7,22 +7,21 @@ CON
   LOAD          = 50
   FIFO_DEPTH    = 9
   FACTOR        = 5
-  OUTPUT_MAX    = 30
+  OUTPUT_MAX    = 100
   
   
 OBJ
    
   term  : "Parallax Serial Terminal"
 
-  fifo[7]       : "Fifo"
+  fifo[9]       : "Fifo"
 
-  merge         : "Buffer"
+  merge         : "Merge"
   times_2       : "ConstantMultiplier"
   times_3       : "ConstantMultiplier"
   times_5       : "ConstantMultiplier"
   filter        : "LowpassFilter"
   fork          : "Fork"
-  accumulator   : "Accumulator"
   
 
 VAR
@@ -47,16 +46,18 @@ VAR
   
   long fifo_6_struct[fifo#STRUCT_SIZE]
   long fifo_6_buffer[FIFO_DEPTH]
-  
-  long rcvBuffer[LOAD + 10]
+
+  long fifo_7_struct[fifo#STRUCT_SIZE]
+  long fifo_7_buffer[FIFO_DEPTH]
+
+  long fifo_8_struct[fifo#STRUCT_SIZE]
+  long fifo_8_buffer[FIFO_DEPTH]
 
 PUB Main | in, x, out, i
 
   term.Start(115_200)
   in := term.CharIn 
   term.clear
-
-  LONGFILL (@rcvBuffer, -1, LOAD)
   
   fifo[0].Initialize(@fifo_0_struct, @fifo_0_buffer, FIFO_DEPTH)
   fifo[1].Initialize(@fifo_1_struct, @fifo_1_buffer, FIFO_DEPTH)
@@ -65,32 +66,35 @@ PUB Main | in, x, out, i
   fifo[4].Initialize(@fifo_4_struct, @fifo_4_buffer, FIFO_DEPTH)
   fifo[5].Initialize(@fifo_5_struct, @fifo_5_buffer, FIFO_DEPTH)
   fifo[6].Initialize(@fifo_6_struct, @fifo_6_buffer, FIFO_DEPTH)
-      
-  times_2.Start(@fifo_0_struct, @fifo_3_struct, 2)
-  times_3.Start(@fifo_1_struct, @fifo_3_struct, 3)
-  times_5.Start(@fifo_2_struct, @fifo_3_struct, 5)
-  merge.Start(@fifo_3_struct, @fifo_4_struct, 0, false)
-  filter.Start(@fifo_4_struct, @fifo_5_struct, OUTPUT_MAX)
-  fork.Start(@fifo_5_struct, @fifo_0_struct, @fifo_1_struct, @fifo_2_struct, @fifo_6_struct)
+  fifo[7].Initialize(@fifo_7_struct, @fifo_7_buffer, FIFO_DEPTH)
+  fifo[8].Initialize(@fifo_8_struct, @fifo_8_buffer, FIFO_DEPTH)
+        
+  fork.Start(@fifo_0_struct, @fifo_1_struct, @fifo_2_struct, @fifo_3_struct, @fifo_4_struct)
+  times_2.Start(@fifo_1_struct, @fifo_5_struct, 2)
+  times_3.Start(@fifo_2_struct, @fifo_6_struct, 3)
+  times_5.Start(@fifo_3_struct, @fifo_7_struct, 5)
+  merge.Start(@fifo_5_struct, @fifo_6_struct, @fifo_7_struct, @fifo_8_struct)
+  filter.Start(@fifo_8_struct, @fifo_0_struct, OUTPUT_MAX)
 
-  fifo[4].Put(1)
+  fifo[0].Put(1)
 
-  i := 0
-  repeat 20
-    long[@rcvBuffer][i++] := fifo[6].Take 
+  repeat
+  
+    if fifo[4].Take
+      term.Dec(fifo[4].LastTaken)
+      term.NewLine
+    else
+      quit
+
+  println(string("done"))
   
   waitcnt(cnt + clkfreq)
   
-  banner(string("Reading receive buffer"))
-
-  repeat x from 0 to LOAD - 1
-    term.Dec(long[@rcvBuffer][x])
-    term.NewLine
-   
-  fifo[1].Destroy
-  fifo[2].Destroy
-
-
+  repeat i from 0 to 8
+    term.Dec(i)
+    term.Str(string(" "))
+    term.Dec(fifo[i].FlowEnded)
+    term.NewLine  
 
 PUB println(s)
   term.Str(s)

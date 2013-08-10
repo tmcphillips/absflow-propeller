@@ -21,11 +21,20 @@ pub Start(input_base, output_1_base, output_2_base, output_3_base, output_4_base
 
 pub Run | input_value
   repeat
-    input_value := _input_fifo.Take
-    _output_1_fifo.Put(input_value) 
-    _output_2_fifo.Put(input_value) 
-    _output_3_fifo.Put(input_value)
-    _output_4_fifo.Put(input_value)
+
+    if _input_fifo.Take  
+      input_value := _input_fifo.LastTaken
+      _output_1_fifo.Put(input_value) 
+      _output_2_fifo.Put(input_value) 
+      _output_3_fifo.Put(input_value)
+      _output_4_fifo.Put(input_value)
+
+    else
+      _output_1_fifo.EndFlow 
+      _output_2_fifo.EndFlow 
+      _output_3_fifo.EndFlow
+      _output_4_fifo.EndFlow
+      Stop
         
 pub Stop
   if cog

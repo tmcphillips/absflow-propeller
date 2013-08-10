@@ -14,11 +14,26 @@ pub Start(inputBase, outputBase, cutoff) : success
   success := (cog := cognew(Run(cutoff), @stack) + 1)
 
 pub Run(cutoff) | inputValue
-  repeat
-    inputValue := _inputFifo.Take
-    if inputValue < cutoff
-      _outputFifo.Put(inputValue) 
 
+  repeat
+    
+    if _inputFifo.Take
+     
+      inputValue := _inputFifo.LastTaken
+      
+      if inputValue < cutoff
+        _outputFifo.Put(inputValue)
+
+      else
+        _outputFifo.EndFlow
+        Stop
+
+    else
+    
+      _outputFifo.EndFlow
+      Stop
+
+  
 pub Stop
   if cog
     cogstop(cog~ - 1)

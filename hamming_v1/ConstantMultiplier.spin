@@ -13,11 +13,16 @@ pub Start(inputBase, outputBase, multiplier) : success
   _outputFifo.SetBaseAddress(outputBase)
   success := (cog := cognew(Run(multiplier), @stack) + 1)
 
-pub Run(multiplier) | inputValue, outputValue
+pub Run(multiplier) | product
   repeat
-    inputValue := _inputfifo.Take
-    outputValue := inputValue * multiplier
-    _outputFifo.Put(outputValue) 
+
+    if _inputFifo.Take 
+      product := _inputFifo.LastTaken * multiplier
+      _outputFifo.Put(product)   
+
+    else                  
+      _outputFifo.EndFlow 
+      Stop
 
 pub Stop
   if cog
