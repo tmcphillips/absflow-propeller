@@ -2,6 +2,8 @@
 CON
 
   STRUCT_SIZE = 8
+
+  FIFO_WIDTH = 4
   
   SEM_ID_OFFSET         = 0
   DEPTH_OFFSET          = 1
@@ -25,27 +27,27 @@ VAR
 
   long _last_taken
   
-PUB Initialize(baseAddress, bufferAddress, fifoDepth)
-  SetBaseAddress(baseAddress)
-  long[sem_id]       := 0 'locknew
-  long[depth]        := fifoDepth
+PUB Initialize(base_address, buffer_address, fifo_depth, semaphore_id)
+  SetBaseAddress(base_address)
+  long[sem_id]       := semaphore_id
+  long[depth]        := fifo_depth
   long[occupancy]    := 0
   long[flow_ended]   := FALSE
-  long[next_write]   := bufferAddress
-  long[next_read]    := bufferAddress
-  long[buffer_start] := bufferAddress
-  long[buffer_end]   := @long[bufferAddress][fifoDepth] - 1
+  long[next_write]   := buffer_address
+  long[next_read]    := buffer_address
+  long[buffer_start] := buffer_address
+  long[buffer_end]   := @long[buffer_address][fifo_depth] - 1
 
       
-PUB SetBaseAddress(baseAddress)
-  sem_id       := @long[baseAddress][SEM_ID_OFFSET]
-  depth        := @long[baseAddress][DEPTH_OFFSET] 
-  occupancy    := @long[baseAddress][OCCUPANCY_OFFSET]
-  flow_ended   := @long[baseAddress][EOF_OFFSET]
-  next_write   := @long[baseAddress][NEXT_WRITE_OFFSET]
-  next_read    := @long[baseAddress][NEXT_READ_OFFSET]
-  buffer_start := @long[baseAddress][BUFFER_START_OFFSET]
-  buffer_end   := @long[baseAddress][BUFFER_END_OFFSET]
+PUB SetBaseAddress(base_address)
+  sem_id       := @long[base_address][SEM_ID_OFFSET]
+  depth        := @long[base_address][DEPTH_OFFSET] 
+  occupancy    := @long[base_address][OCCUPANCY_OFFSET]
+  flow_ended   := @long[base_address][EOF_OFFSET]
+  next_write   := @long[base_address][NEXT_WRITE_OFFSET]
+  next_read    := @long[base_address][NEXT_READ_OFFSET]
+  buffer_start := @long[base_address][BUFFER_START_OFFSET]
+  buffer_end   := @long[base_address][BUFFER_END_OFFSET]
 
 
 PUB EndFlow
@@ -69,7 +71,7 @@ PUB Put(value)
     if long[occupancy] < long[depth]
     
       long[long[next_write]] := value
-      long[next_write] += 4
+      long[next_write] += FIFO_WIDTH
       long[occupancy]++
       
       if (long[next_write] > long[buffer_end])
@@ -90,7 +92,7 @@ PUB Take
     if long[occupancy] > 0
     
       _last_taken := long[long[next_read]]
-      long[next_read] += 4
+      long[next_read] += FIFO_WIDTH
       long[occupancy]--
       
       if (long[next_read] > long[buffer_end])
@@ -110,6 +112,3 @@ PUB Take
 
 Pub LastTaken
   return _last_taken
-
-PUB Destroy
-  lockret(long[sem_id])

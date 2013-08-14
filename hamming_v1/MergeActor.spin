@@ -1,13 +1,14 @@
 OBJ
    
-  _input_1   : "Fifo"
-  _input_2   : "Fifo"
-  _input_3   : "Fifo"
-  _output   : "Fifo"
+  _input_1   : "LongFifo"
+  _input_2   : "LongFifo"
+  _input_3   : "LongFifo"
+  _output    : "LongFifo"
    
 VAR
   byte cog
   long stack[50]
+  byte running 
   
 pub Start(input_1_base, input_2_base, input_3_base, output_base) : success
   stop
@@ -18,7 +19,7 @@ pub Start(input_1_base, input_2_base, input_3_base, output_base) : success
   success := (cog := cognew(Run, @stack) + 1)
 
 pub Run | ok
-
+  running := true
   repeat
     ok := false
 
@@ -35,10 +36,16 @@ pub Run | ok
       ok := true
 
   while ok
+  Shutdown
 
+pri Shutdown
   _output.EndFlow
+  running := false 
   Stop
 
 pub Stop
   if cog
-    cogstop(cog~ - 1) 
+    cogstop(cog~ - 1)
+
+pub IsRunning
+  return running
