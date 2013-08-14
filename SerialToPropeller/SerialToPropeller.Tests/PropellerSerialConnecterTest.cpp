@@ -1,13 +1,13 @@
 #include "stdafx.h"
 #include "CppUnitTest.h"
 
-#include "PropellerSerialConnector.h"  
 
+#include "PropellerSerialConnector.h"  
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
-namespace SerialToPropellerTests
-{		
+namespace AbsFlow { namespace Propeller {
+		
 	TEST_CLASS(SerialToPropellerTests)
 	{
 	public:
@@ -15,15 +15,16 @@ namespace SerialToPropellerTests
 		TEST_METHOD(TestEcho)
 		{
 
-			char* messageToSend = "Hello!\r";
+			char* messageToSend = "Hello!";
 			PropellerSerialConnector connector( L"COM4");
 			char receivedMessage[200];
 
-			connector.writeString(messageToSend);
-			connector.readString(receivedMessage);
+			connector.writeLine(messageToSend);
+			connector.readLine(receivedMessage);
 
 			Assert::AreEqual(messageToSend, receivedMessage);
 		}
 
 	};
-}
+
+}}

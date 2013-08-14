@@ -87,12 +87,17 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="FifoTest.cpp" />
+    <ClCompile Include="ConstantMultiplierActorTests.cpp" />
+    <ClCompile Include="ForkActorTests.cpp" />
+    <ClCompile Include="LongFifoTests.cpp" />
+    <ClCompile Include="LowpassFilterActorTests.cpp" />
+    <ClCompile Include="MergeActorTests.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="PropellerSerialConnecterTest.cpp" />
+    <ClCompile Include="BufferActorTests.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PropellerSerialConnector\PropellerSerialConnector.vcxproj">
