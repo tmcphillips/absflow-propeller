@@ -1,12 +1,19 @@
 #include "stdafx.h"
 #include "PropellerSerialConnector.h"
 
+namespace AbsFlow { namespace Propeller {
 
 PropellerSerialConnector::PropellerSerialConnector(LPCWSTR portName) :
 	_portName(portName)
 {
-	_hSerial = CreateFileW(_portName, 
-		GENERIC_READ | GENERIC_WRITE, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	_hSerial = CreateFileW(
+		_portName, 
+		GENERIC_READ | GENERIC_WRITE, 
+		0, 
+		0, 
+		OPEN_EXISTING, 
+		FILE_ATTRIBUTE_NORMAL,
+		0);
 
 	if (_hSerial == INVALID_HANDLE_VALUE) {
 		if(GetLastError() == ERROR_FILE_NOT_FOUND) {
@@ -68,46 +75,74 @@ void PropellerSerialConnector::writeChar(char c) {
 	}
 }
 
-void PropellerSerialConnector::writeChars(char c1, char c2) {
+PropellerSerialConnector& PropellerSerialConnector::operator<<(char c) {
+	writeChar(c);
+	return *this;
+}
+
+void PropellerSerialConnector::writeCharChar(char c1, char c2) {
 	writeChar(c1);
 	writeChar(c2);
 }
 
-void PropellerSerialConnector::writeChars(char c1, char c2, char c3) {
-	writeChar(c1);
-	writeChar(c2);
-	writeChar(c3);
-}
-
-void PropellerSerialConnector::writeChars(char c1, char c2, char c3, char c4) {
-	writeChar(c1);
-	writeChar(c2);
-	writeChar(c3);
-	writeChar(c4);
-}
-
-void PropellerSerialConnector::writeChars(char* message) {
-
-	DWORD dwBytesWritten = 0;
-
-	if(!WriteFile(_hSerial, message, strlen(message), &dwBytesWritten, NULL)){
-		throw("Error writing string to serial port\n");
+void PropellerSerialConnector::writeInt32(__int32 value)
+{
+	char *p = (char*) &value;
+	for (int i = 0; i < 4; i++) {
+	 writeChar(*p++);
 	}
 }
 
-void PropellerSerialConnector::writeString(char* message) {
+void PropellerSerialConnector::writeCharInt32(char c, __int32 i)
+{ 
+	writeChar(c);
+	writeInt32(i);
+}
+
+void PropellerSerialConnector::writeCharInt32Int32(char c, __int32 i1, __int32 i2)
+{ 
+	writeChar(c);
+	writeInt32(i1);
+	writeInt32(i2);
+}
+
+__int32 PropellerSerialConnector::writeCharInt32ReadInt32(char c, __int32 i)
+{
+	writeChar(c);
+	writeInt32(i);
+	return readInt32();
+}
+
+__int32 PropellerSerialConnector::writeCharCharInt32ReadInt32(char c1, char c2, __int32 i) {
+	writeChar(c1);
+	writeChar(c2);
+	writeInt32(i);
+	return readInt32();
+}
+
+__int32 PropellerSerialConnector::writeCharInt32Int32ReadInt32(char c, __int32 i1, _int32 i2)
+{
+	writeChar(c);
+	writeInt32(i1);
+	writeInt32(i2);
+	return readInt32();
+}
+
+void PropellerSerialConnector::writeLine(char* text) {
 
 	DWORD dwBytesWritten = 0;
 
-	if(!WriteFile(_hSerial, message, strlen(message), &dwBytesWritten, NULL)){
+	if(!WriteFile(_hSerial, text, strlen(text), &dwBytesWritten, NULL)){
 		throw("Error writing string to serial port\n");
 	}
+
+	writeChar('\r');
 }
 
-int PropellerSerialConnector::readChar() {
+char PropellerSerialConnector::readChar() {
 
 	DWORD dwBytesRead = 0;
-	int c = 0;
+	char c = 0;
 
 	if (!ReadFile(_hSerial, &c, 1, &dwBytesRead, NULL)) {
 		throw("Error reading string from serial port\n");
@@ -116,27 +151,42 @@ int PropellerSerialConnector::readChar() {
 	return c;
 }
 
-int PropellerSerialConnector::writeThenRead(char c) 
+void PropellerSerialConnector::writeCharReadArray(char c, void* array, int size)
 {
 	writeChar(c);
-	return readChar();
+	readArray(array, size);
 }
 
-int PropellerSerialConnector::writeThenRead(char c1, char c2)
+void PropellerSerialConnector::writeCharCharReadArray(char c1, char c2, void* structure, int size)
 {
 	writeChar(c1);
 	writeChar(c2);
-	return readChar();
+	readArray(structure, size);
 }
 
-void PropellerSerialConnector::writeThenRead(char c, void* buffer, int count)
-{
+__int32 PropellerSerialConnector::writeCharReadInt32(char c) {
 	writeChar(c);
-	readChars(buffer, count);
+	return readInt32();
 }
 
+__int32 PropellerSerialConnector::writeInt32ReadInt32(int i) {
+	writeInt32(i);
+	return readInt32();
+}
 
-void PropellerSerialConnector::readChars(void* buffer, int count) {
+__int32 PropellerSerialConnector::writeInt32Int32ReadInt32(int i1, int i2) {
+	writeInt32(i1);
+	writeInt32(i2);
+	return readInt32();
+}
+
+__int32 PropellerSerialConnector::readInt32() {
+	__int32 value;
+	readArray(&value, 4);
+	return value;
+}
+
+void PropellerSerialConnector::readArray(void* buffer, int count) {
 
 	DWORD dwBytesRead = 0;
 
@@ -145,17 +195,18 @@ void PropellerSerialConnector::readChars(void* buffer, int count) {
 	}
 }
 
-void PropellerSerialConnector::readString(char* messageBuffer) {
+void PropellerSerialConnector::readLine(char* text) {
 
 	DWORD dwBytesRead = 0;
-	char* nextChar = messageBuffer;
-	char lastRead = 0;
+	char* tp = text;
 
 	do {
-		if (!ReadFile(_hSerial, nextChar, 1, &dwBytesRead, NULL)) {
+		if (!ReadFile(_hSerial, tp, 1, &dwBytesRead, NULL)) {
 			throw("Error reading string from serial port\n");
 		}
-	} while (*nextChar++ != '\r');
+	} while (*tp++ != '\r');
 
-	*nextChar = 0;
+	*(tp - 1) = 0;
 }
+
+}}
