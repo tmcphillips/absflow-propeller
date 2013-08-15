@@ -16,11 +16,12 @@ namespace AbsFlow { namespace Propeller {
 		{
 
 			char* messageToSend = "Hello!";
-			PropellerSerialConnector connector( L"COM4");
+			PropellerSerialConnector propeller;
+			propeller.open(L"COM4");
 			char receivedMessage[200];
 
-			connector.writeLine(messageToSend);
-			connector.readLine(receivedMessage);
+			propeller.writeLine(messageToSend);
+			propeller.readLine(receivedMessage);
 
 			Assert::AreEqual(messageToSend, receivedMessage);
 		}
