@@ -80,6 +80,16 @@ PropellerSerialConnector& PropellerSerialConnector::operator<<(char c) {
 	return *this;
 }
 
+PropellerSerialConnector& PropellerSerialConnector::operator<<(__int32 i) {
+	writeInt32(i);
+	return *this;
+}
+
+PropellerSerialConnector& PropellerSerialConnector::operator>>(_int32& i) {
+	i = readInt32();
+	return *this;
+}
+
 void PropellerSerialConnector::writeCharChar(char c1, char c2) {
 	writeChar(c1);
 	writeChar(c2);

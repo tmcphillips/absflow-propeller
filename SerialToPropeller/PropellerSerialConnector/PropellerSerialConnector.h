@@ -42,6 +42,8 @@ namespace AbsFlow { namespace Propeller {
 		void writeCharCharReadArray(char c1, char c2, void* array, int size);
 
 		PropellerSerialConnector& operator<<(char c);
+		PropellerSerialConnector& operator<<(__int32 i);
+		PropellerSerialConnector& operator>>(_int32& i);
 
 	private:
 	 
