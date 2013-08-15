@@ -20,4 +20,22 @@ namespace AbsFlow { namespace Propeller {
 		Assert::AreEqual((int)expected, (int)actual);
 	}
 
+	static void AreEqual(int expected, PropellerSerialConnector& propeller) {
+		int actual;
+		propeller >> actual;
+		Assert::AreEqual(expected, actual);
+	}
+
+	static void AssertTrue(PropellerSerialConnector& propeller) {	
+		int result;
+		propeller >> result;
+		Propeller::IsTrue(result);
+	}
+
+	static void AssertFalse(PropellerSerialConnector& propeller) {
+		int result;
+		propeller >> result;
+		Propeller::IsFalse(result);
+	}
+
 }}
