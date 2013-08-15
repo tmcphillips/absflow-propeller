@@ -3,9 +3,13 @@
 
 namespace AbsFlow { namespace Propeller {
 
-PropellerSerialConnector::PropellerSerialConnector(LPCWSTR portName) :
-	_portName(portName)
+PropellerSerialConnector::PropellerSerialConnector() {
+
+}
+
+void PropellerSerialConnector::open(LPCWSTR portName)
 {
+	_portName = portName;
 	_hSerial = CreateFileW(
 		_portName, 
 		GENERIC_READ | GENERIC_WRITE, 
@@ -48,7 +52,7 @@ PropellerSerialConnector::PropellerSerialConnector(LPCWSTR portName) :
 }
 
 
-PropellerSerialConnector::~PropellerSerialConnector(void)
+void PropellerSerialConnector::close()
 {
 	CloseHandle(_hSerial);
 }

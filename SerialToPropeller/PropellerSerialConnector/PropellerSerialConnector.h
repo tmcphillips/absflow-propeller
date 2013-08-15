@@ -9,13 +9,14 @@ using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 namespace AbsFlow { namespace Propeller {
 
-	class PropellerSerialConnector
+class PropellerSerialConnector
 {
 	public:
 
-		// constructor and destructor
-		PropellerSerialConnector(LPCWSTR portName);
-		~PropellerSerialConnector(void);
+		PropellerSerialConnector();
+
+		void open(LPCWSTR portName);
+		void close();
 
 		// write methods
 		void writeChar(char c);
@@ -53,5 +54,4 @@ namespace AbsFlow { namespace Propeller {
 		void printerr();
 };
 
-	}
-}
+}}
