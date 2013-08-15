@@ -8,7 +8,7 @@ CON
   
 OBJ
    
-  merge_actor    : "MergeActor"
+  merge_actor   : "MergeActor"
   input_1_fifo  : "LongFifo"
   input_2_fifo  : "LongFifo"
   input_3_fifo  : "LongFifo"
@@ -57,7 +57,7 @@ PUB Main | i, v
         term.WriteLong(merge_actor.Start(@input_fifo_1_struct, @input_fifo_2_struct, @input_fifo_3_struct, @output_fifo_struct))
         
       "P":  'Put long to input fifo
-        case term.CharIn
+        case term.ReadLong
           1:
             term.WriteLong(input_1_fifo.put(term.ReadLong))                
           2:
@@ -72,7 +72,7 @@ PUB Main | i, v
         term.WriteLong(output_fifo.LastTaken)
         
       "E":  'Signal end of flow
-        case term.CharIn
+        case term.ReadLong
           1:
             input_1_fifo.EndFlow                  
           2:
@@ -97,7 +97,7 @@ PUB Main | i, v
         term.WriteLong(true)
   
       "Q":  'Query fifo data structure
-        case term.CharIn
+        case term.ReadLong
           0: 
             repeat i from 0 to 31
               term.Char(byte[@output_fifo_struct][i])  
