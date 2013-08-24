@@ -3,19 +3,10 @@
 
 namespace AbsFlow { namespace Propeller {
 
-	SerialConnection::SerialConnection() :
-	_hSerial(INVALID_HANDLE_VALUE) {
-}
+SerialConnection::SerialConnection(LPCWSTR portName) {
 
-SerialConnection::~SerialConnection() {
-	close();
-}
-
-void SerialConnection::open(LPCWSTR portName) {
-
-	_portName = portName;
 	_hSerial = CreateFileW(
-		_portName, 
+		portName, 
 		GENERIC_READ | GENERIC_WRITE, 
 		0, 
 		0, 
@@ -56,12 +47,9 @@ void SerialConnection::open(LPCWSTR portName) {
 }
 
 
-void SerialConnection::close()
-{
-	if (_hSerial != INVALID_HANDLE_VALUE) {
-		CloseHandle(_hSerial);
-		_hSerial = INVALID_HANDLE_VALUE;
-	}
+
+SerialConnection::~SerialConnection() {
+	CloseHandle(_hSerial);
 }
 
 void SerialConnection::printerr() {

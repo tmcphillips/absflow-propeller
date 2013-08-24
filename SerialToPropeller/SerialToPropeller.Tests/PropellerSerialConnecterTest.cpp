@@ -15,12 +15,7 @@ private:
 
 public:
 
-	TEST_METHOD_INITIALIZE(TestInitialize) {
-		propeller.open(L"COM4");
-	}
-
-	TEST_METHOD_CLEANUP(TestCleanup) {
-	}
+	SerialToPropellerTests() : propeller(L"COM4") {}
 
 	TEST_METHOD(TestStringPutGet) {
 		std::string stringToSend = "Hello!";

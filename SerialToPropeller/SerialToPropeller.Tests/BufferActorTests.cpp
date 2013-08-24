@@ -29,10 +29,7 @@ private:
 
 public:
 
-	TEST_METHOD_INITIALIZE(TestInitialize)
-	{
-		propeller.open(L"COM4");
-	}
+	BufferActorTests() : propeller(L"COM4") {}
 
 	TEST_METHOD_CLEANUP(TestCleanup)
 	{

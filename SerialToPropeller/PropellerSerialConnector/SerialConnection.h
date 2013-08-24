@@ -13,10 +13,8 @@ class SerialConnection
 {
 	public:
 
-		SerialConnection();
+		SerialConnection(LPCWSTR portName);
 		~SerialConnection();
-		void open(LPCWSTR portName);
-		void close();
 
 		// write methods
 		void writeChar(char c);
@@ -37,9 +35,7 @@ class SerialConnection
 
 	private:
 	 
-		LPCWSTR _portName;
 		HANDLE _hSerial;
-
 		void printerr();
 };
 
