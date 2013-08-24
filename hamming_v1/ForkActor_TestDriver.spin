@@ -39,7 +39,7 @@ VAR
   long output_3_sem_id
   long output_4_sem_id
 
-PUB Main | i, v
+PUB Main | i, value, input_fifo_depth, output_fifo_1_depth, output_fifo_2_depth, output_fifo_3_depth, output_fifo_4_depth, option 
 
   term.Start(115_200)
 
@@ -53,28 +53,46 @@ PUB Main | i, v
                     
     case term.CharIn
     
-      "I":  'Initialize input and output fifos with requested size 
-        input_fifo.Initialize(@input_fifo_struct, @input_fifo_buffer, term.ReadLong, input_sem_id)
-        output_1_fifo.Initialize(@output_fifo_1_struct, @output_fifo_1_buffer, term.ReadLong, output_1_sem_id)
-        output_2_fifo.Initialize(@output_fifo_2_struct, @output_fifo_2_buffer, term.ReadLong, output_2_sem_id)
-        output_3_fifo.Initialize(@output_fifo_3_struct, @output_fifo_3_buffer, term.ReadLong, output_3_sem_id)
-        output_4_fifo.Initialize(@output_fifo_4_struct, @output_fifo_4_buffer, term.ReadLong, output_4_sem_id)
+      "I":  'Initialize input and output fifos with requested size
+        term.ReadLong(@input_fifo_depth)
+        term.ReadLong(@output_fifo_1_depth)
+        term.ReadLong(@output_fifo_2_depth)
+        term.ReadLong(@output_fifo_3_depth)
+        term.ReadLong(@output_fifo_4_depth)                   
+        input_fifo.Initialize(@input_fifo_struct, @input_fifo_buffer, input_fifo_depth, input_sem_id)
+        output_1_fifo.Initialize(@output_fifo_1_struct, @output_fifo_1_buffer, output_fifo_1_depth, output_1_sem_id)
+        output_2_fifo.Initialize(@output_fifo_2_struct, @output_fifo_2_buffer, output_fifo_2_depth, output_2_sem_id)
+        output_3_fifo.Initialize(@output_fifo_3_struct, @output_fifo_3_buffer, output_fifo_3_depth, output_3_sem_id)
+        output_4_fifo.Initialize(@output_fifo_4_struct, @output_fifo_4_buffer, output_fifo_4_depth, output_4_sem_id)
         term.WriteLong(fork_actor.Start(@input_fifo_struct, @output_fifo_1_struct, @output_fifo_2_struct, @output_fifo_3_struct, @output_fifo_4_struct))
         
       "P":  'Put long to input fifo
-        term.WriteLong(input_fifo.put(term.ReadLong))                
+        term.ReadLong(@value)
+        term.WriteLong(input_fifo.put(value))                
 
       "T":  'Take character from each output fifo
-        term.WriteLong(output_1_fifo.Take)
-        term.WriteLong(output_2_fifo.Take)
-        term.WriteLong(output_3_fifo.Take)
-        term.WriteLong(output_4_fifo.Take)
+        term.ReadLong(@option)
+        case option
+          1:
+            term.WriteLong(output_1_fifo.Take)
+          2:
+            term.WriteLong(output_2_fifo.Take)
+          3:
+            term.WriteLong(output_3_fifo.Take)
+          4:
+            term.WriteLong(output_4_fifo.Take)
 
       "L":  'Return last character taken from each fifo
-        term.WriteLong(output_1_fifo.LastTaken)
-        term.WriteLong(output_2_fifo.LastTaken)
-        term.WriteLong(output_3_fifo.LastTaken)
-        term.WriteLong(output_4_fifo.LastTaken)
+        term.ReadLong(@option)
+        case option
+          1:
+            term.WriteLong(output_1_fifo.LastTaken)
+          2:
+            term.WriteLong(output_2_fifo.LastTaken)
+          3:
+            term.WriteLong(output_3_fifo.LastTaken)
+          4:
+            term.WriteLong(output_4_fifo.LastTaken)
         
       "E":  'Signal end of flow
         input_fifo.EndFlow
@@ -95,7 +113,8 @@ PUB Main | i, v
        term.WriteLong(true)
   
       "Q":  'Query fifo data structure
-        case term.CharIn
+        term.ReadLong(@option)
+        case option
           0: 
             repeat i from 0 to 31
               term.Char(byte[@input_fifo_struct][i])  

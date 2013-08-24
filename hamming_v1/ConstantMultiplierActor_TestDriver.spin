@@ -8,7 +8,7 @@ CON
   
 OBJ
    
-  buffer_actor : "ConstantMultiplierActor"
+  actor         : "ConstantMultiplierActor"
   input_fifo   : "LongFifo"
   output_fifo  : "LongFifo"
   term         : "SerialConnection"
@@ -22,7 +22,7 @@ VAR
   long input_sem_id
   long output_sem_id
 
-PUB Main | i, v
+PUB Main | i, value, input_fifo_depth, output_fifo_depth, multiplier
 
   term.Start(115_200)
 
@@ -33,13 +33,17 @@ PUB Main | i, v
                     
     case term.CharIn
     
-      "I":  'Initialize input and output fifos with requested size 
-        input_fifo.Initialize(@input_fifo_struct, @input_fifo_buffer, term.ReadLong, input_sem_id)
-        output_fifo.Initialize(@output_fifo_struct, @output_fifo_buffer, term.ReadLong, output_sem_id)
-        term.WriteLong(buffer_actor.Start(@input_fifo_struct, @output_fifo_struct, term.ReadLong))
+      "I":  'Initialize input and output fifos with requested size
+        term.ReadLong(@input_fifo_depth)
+        term.ReadLong(@output_fifo_depth)
+        term.ReadLong(@multiplier)
+        input_fifo.Initialize(@input_fifo_struct, @input_fifo_buffer,input_fifo_depth, input_sem_id)
+        output_fifo.Initialize(@output_fifo_struct, @output_fifo_buffer, output_fifo_depth, output_sem_id)
+        term.WriteLong(actor.Start(@input_fifo_struct, @output_fifo_struct, multiplier))
         
       "P":  'Put long to input fifo
-        term.WriteLong(input_fifo.put(term.ReadLong))                
+        term.ReadLong(@value)
+        term.WriteLong(input_fifo.put(value))                
 
       "T":  'Take character from output fifo
         term.WriteLong(output_fifo.Take)
@@ -55,7 +59,7 @@ PUB Main | i, v
 
       "D":  'Destroy actor
         input_fifo.EndFlow
-        repeat while buffer_actor.IsRunning
+        repeat while actor.IsRunning
         term.WriteLong(true)
 
       "W":  'Wait for input queue to empty

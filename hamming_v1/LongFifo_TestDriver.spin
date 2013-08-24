@@ -16,7 +16,7 @@ VAR
   long fifo_struct[fifo#STRUCT_SIZE]
   long fifo_buffer[FIFO_MAX_DEPTH]
 
-PUB Main | i, sem_id
+PUB Main | i, sem_id, fifo_depth, value
 
   term.Start(115_200)
   sem_id := locknew
@@ -26,12 +26,15 @@ PUB Main | i, sem_id
     case term.CharIn
 
       "I":  'Initialize fifo of requested size
-        fifo.Initialize(@fifo_struct, @fifo_buffer, term.ReadLong, sem_id)
+        term.ReadLong(@fifo_depth)
+        fifo.Initialize(@fifo_struct, @fifo_buffer, fifo_depth, sem_id)
+        term.WriteLong(true)
         
       "P":  'Put long to fifo
-        term.WriteLong(fifo.put(term.ReadLong))                
+        term.ReadLong(@value)
+        term.WriteLong(fifo.put(value))                
 
-      "T":  'Take character from fifo
+      "T":  'Take character from fifo 
         term.WriteLong(fifo.Take)
 
       "L":  'Return last character taken from fifo
