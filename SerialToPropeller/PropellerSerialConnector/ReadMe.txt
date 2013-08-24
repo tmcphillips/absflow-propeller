@@ -1,20 +1,20 @@
 ========================================================================
-    STATIC LIBRARY : PropellerSerialConnector Project Overview
+    STATIC LIBRARY : SerialConnection Project Overview
 ========================================================================
 
-AppWizard has created this PropellerSerialConnector library project for you.
+AppWizard has created this SerialConnection library project for you.
 
 This file contains a summary of what you will find in each of the files that
-make up your PropellerSerialConnector application.
+make up your SerialConnection application.
 
 
-PropellerSerialConnector.vcxproj
+SerialConnection.vcxproj
     This is the main project file for VC++ projects generated using an Application Wizard.
     It contains information about the version of Visual C++ that generated the file, and
     information about the platforms, configurations, and project features selected with the
     Application Wizard.
 
-PropellerSerialConnector.vcxproj.filters
+SerialConnection.vcxproj.filters
     This is the filters file for VC++ projects generated using an Application Wizard. 
     It contains information about the association between the files in your project 
     and the filters. This association is used in the IDE to show grouping of files with
@@ -26,7 +26,7 @@ PropellerSerialConnector.vcxproj.filters
 
 StdAfx.h, StdAfx.cpp
     These files are used to build a precompiled header (PCH) file
-    named PropellerSerialConnector.pch and a precompiled types file named StdAfx.obj.
+    named SerialConnection.pch and a precompiled types file named StdAfx.obj.
 
 /////////////////////////////////////////////////////////////////////////////
 Other notes:

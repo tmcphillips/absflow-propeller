@@ -24,18 +24,18 @@
     <ClInclude Include="targetver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="PropellerSerialConnector.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="PropAssert.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SerialConnection.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="PropellerSerialConnector.cpp">
+    <ClCompile Include="SerialConnection.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
