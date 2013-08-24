@@ -11,4 +11,4 @@
 #include "CppUnitTest.h"
 
 // TODO: reference additional headers your program requires here
-#include "PropellerSerialConnector.h"  
+#include "SerialConnection.h"  
