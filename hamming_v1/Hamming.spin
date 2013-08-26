@@ -16,12 +16,12 @@ OBJ
 
   fifo[9]       : "LongFifo"
 
-  merge         : "MergeActor"
+  filtered_fork : "FilterThenForkActor"
   times_2       : "ConstantMultiplierActor"
   times_3       : "ConstantMultiplierActor"
   times_5       : "ConstantMultiplierActor"
-  filter        : "LowpassFilterActor"
-  fork          : "ForkActor"
+  merge_2_3     : "OrderedMergeActor"
+  merge_2_3_5   : "OrderedMergeActor"
   
 
 VAR
@@ -69,12 +69,12 @@ PUB Main | in, x, out, i
   fifo[7].Initialize(@fifo_7_struct, @fifo_7_buffer, FIFO_DEPTH, 0)
   fifo[8].Initialize(@fifo_8_struct, @fifo_8_buffer, FIFO_DEPTH, 0)
         
-  fork.Start(@fifo_0_struct, @fifo_1_struct, @fifo_2_struct, @fifo_3_struct, @fifo_4_struct)
+  filtered_fork.Start(@fifo_0_struct, @fifo_1_struct, @fifo_2_struct, @fifo_3_struct, @fifo_4_struct, OUTPUT_MAX, 1)
   times_2.Start(@fifo_1_struct, @fifo_5_struct, 2)
   times_3.Start(@fifo_2_struct, @fifo_6_struct, 3)
   times_5.Start(@fifo_3_struct, @fifo_7_struct, 5)
-  merge.Start(@fifo_5_struct, @fifo_6_struct, @fifo_7_struct, @fifo_8_struct)
-  filter.Start(@fifo_8_struct, @fifo_0_struct, OUTPUT_MAX, 1)
+  merge_2_3.Start(@fifo_5_struct, @fifo_6_struct, @fifo_8_struct)
+  merge_2_3_5.Start(@fifo_7_struct, @fifo_8_struct, @fifo_0_struct)
 
   fifo[0].Put(1)
 
@@ -89,16 +89,15 @@ PUB Main | in, x, out, i
   term.Str(string("done"))
   term.NewLine
   
-  repeat while fork.IsRunning
+  repeat while filtered_fork.IsRunning
   repeat while times_2.IsRunning
   repeat while times_3.IsRunning
   repeat while times_5.IsRunning
-  repeat while merge.IsRunning
-  repeat while filter.IsRunning
-
+  repeat while merge_2_3.IsRunning
+  repeat while merge_2_3_5.IsRunning
+  
   repeat i from 0 to 8
     term.Dec(i)
     term.Str(string(" "))
     term.Dec(fifo[i].FlowEnded)
     term.NewLine  
-
