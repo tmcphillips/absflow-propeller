@@ -1,41 +1,50 @@
 #pragma once
 
 #include <windows.h>
-#include <stdio.h>
-#include <tchar.h>
-#include "CppUnitTest.h"
-
-using namespace Microsoft::VisualStudio::CppUnitTestFramework;
+#include <string>
 
 namespace AbsFlow { namespace Propeller {
 
-class SerialConnection
-{
+	class SerialConnection
+	{
 	public:
 
-		SerialConnection(LPCWSTR portName);
+		// constructor and destructor
+		SerialConnection(std::string portName);
 		~SerialConnection();
 
-		// write methods
-		void writeChar(char c);
-		void writeInt32(__int32 i);
-		void writeString(std::string& s);
+		// efficient multibyte serial I/O methods
+		void readBytes(void* destination, int count);
+		void writeBytes(const void* source, int count);
 
-		// read methods
-		char readChar();
-		void readChars(void* array, int count);
-		__int32 readInt32();
+		// shortcut methods for single-byte I/O
+		inline unsigned char readByte() { unsigned int b; readBytes(&b, 1); return b; }
+		inline void writeByte(unsigned char b) { writeBytes(&b, 1); }
 
-		SerialConnection& operator<<(char c);
-		SerialConnection& operator<<(__int32 i);
-		SerialConnection& operator<<(std::string& s);
-		SerialConnection& operator>>(char& c);
-		SerialConnection& operator>>(__int32& i);
+		// put operators
+		inline SerialConnection& operator<<(unsigned char u) { writeByte(u); return *this; }
+		inline SerialConnection& operator<<(char c) { writeByte(c); return *this; }
+		inline SerialConnection& operator<<(__int16 i) { writeBytes(&i, 2); return *this; }
+		inline SerialConnection& operator<<(__int32 i) { writeBytes(&i, 4); return *this; }
+		inline SerialConnection& operator<<(std::string& s) { writeBytes(s.c_str(), s.size() + 1); return *this; }
+
+		// get operators
+		inline SerialConnection& operator>>(unsigned char& u) { u = readByte(); return *this; }
+		inline SerialConnection& operator>>(char& c)  { c = readByte(); return *this; }
+		inline SerialConnection& operator>>(__int16& i) { readBytes(&i, 2); return *this; }
+		inline SerialConnection& operator>>(__int32& i) { readBytes(&i, 4); return *this; }
 		SerialConnection& operator>>(std::string& s);
 
 	private:
 	 
-		HANDLE _hSerial;
+		// private fields
+		HANDLE _handle;
+
+		// private methods
+		void stringToWideChars(std::string source, WCHAR* destination);
+		void openSerialPort(WCHAR* portName);
+		void setPortParameters(DWORD baudRate, BYTE byteSize, BYTE stopBits, BYTE parity);
+		void setPortTimeouts();
 		void printerr();
 };
 

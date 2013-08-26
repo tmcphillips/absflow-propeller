@@ -28,7 +28,7 @@ private:
 
 public:
 
-	LowpassFilterActorTests() : propeller(L"COM4") {}
+	LowpassFilterActorTests() : propeller("COM4") {}
 
 	TEST_METHOD_CLEANUP(TestCleanup)
 	{
@@ -42,7 +42,7 @@ public:
 
 		// verify initial state of input fifo
 		propeller << 'Q' << 'i';
-		propeller.readChars(&state, sizeof(state));
+		propeller.readBytes(&state, sizeof(state));
 		Assert::AreEqual(0, state.semid);
 		Assert::AreEqual(5, state.depth);
 		Assert::AreEqual(0, state.occupancy);
@@ -50,7 +50,7 @@ public:
 
 		// verify initial state of output fifo
 		propeller << 'Q' << 'o';
-		propeller.readChars(&state, sizeof(state));
+		propeller.readBytes(&state, sizeof(state));
 		Assert::AreEqual(1, state.semid);
 		Assert::AreEqual(7, state.depth);
 		Assert::AreEqual(0, state.occupancy);
@@ -62,25 +62,25 @@ public:
 		Propeller::AssertTrue(propeller << 'I' << 5 << 7 << 12 << 0);
 
 		propeller << 'Q' << 'i';
-		propeller.readChars(&state, sizeof(state));
+		propeller.readBytes(&state, sizeof(state));
 		Assert::AreEqual(0, state.occupancy);
 
 		propeller << 'Q' << 'o';
-		propeller.readChars(&state, sizeof(state));
+		propeller.readBytes(&state, sizeof(state));
 		Assert::AreEqual(0, state.occupancy);
 
 		// put one value to the input fifo and verify output fifo occupancy of one
 		Propeller::AssertTrue(propeller << 'P' << 1);
 		Propeller::AssertTrue(propeller << 'W');
 		propeller << 'Q' << 'o';
-		propeller.readChars(&state, sizeof(state));
+		propeller.readBytes(&state, sizeof(state));
 		Assert::AreEqual(1, state.occupancy);
 
 		// put second value to the input fifo and verify output fifo occupancy of two
 		Propeller::AssertTrue(propeller << 'P' << 2);
 		Propeller::AssertTrue(propeller << 'W');
 		propeller << 'Q' << 'o';
-		propeller.readChars(&state, sizeof(state));
+		propeller.readBytes(&state, sizeof(state));
 		Assert::AreEqual(2, state.occupancy);
 	}
 
@@ -89,25 +89,25 @@ public:
 		Propeller::AssertTrue(propeller << 'I' << 5 << 7 << 12 << 0);
 
 		propeller << 'Q' << 'i';
-		propeller.readChars(&state, sizeof(state));
+		propeller.readBytes(&state, sizeof(state));
 		Assert::AreEqual(0, state.occupancy);
 
 		propeller << 'Q' << 'o';
-		propeller.readChars(&state, sizeof(state));
+		propeller.readBytes(&state, sizeof(state));
 		Assert::AreEqual(0, state.occupancy);
 
 		// put one value to the input fifo and verify output fifo occupancy of one
 		Propeller::AssertTrue(propeller << 'P' << 13);
 		Propeller::AssertTrue(propeller << 'W');
 		propeller << 'Q' << 'o';
-		propeller.readChars(&state, sizeof(state));
+		propeller.readBytes(&state, sizeof(state));
 		Assert::AreEqual(0, state.occupancy);
 
 		// put second value to the input fifo and verify output fifo occupancy of two
 		Propeller::AssertTrue(propeller << 'P' << 14);
 		Propeller::AssertTrue(propeller << 'W');
 		propeller << 'Q' << 'o';
-		propeller.readChars(&state, sizeof(state));
+		propeller.readBytes(&state, sizeof(state));
 		Assert::AreEqual(0, state.occupancy);
 	}
 
@@ -117,7 +117,7 @@ public:
 		Propeller::AssertTrue(propeller << 'I' << 5 << 7 << 12 << 0);
 
 		propeller << 'Q' << 'i';
-		propeller.readChars(&state, sizeof(state));
+		propeller.readBytes(&state, sizeof(state));
 
 		// put three values to input fifo
 		Propeller::AssertTrue(propeller << 'P' << 1);
@@ -129,28 +129,28 @@ public:
 
 		// query fifo state and verify occupancy of 3
 		propeller << 'Q' << 'o';
-		propeller.readChars(&state, sizeof(state));
+		propeller.readBytes(&state, sizeof(state));
 		Assert::AreEqual(3, state.occupancy);
 
 		// Propeller value from fifo and verify new occupancy of 2
 		Propeller::AssertTrue(propeller << 'T');
 		Propeller::AreEqual(1, propeller << 'L');
 		propeller << 'Q' << 'o';
-		propeller.readChars(&state, sizeof(state));
+		propeller.readBytes(&state, sizeof(state));
 		Assert::AreEqual(2, state.occupancy);
 
 		// take value from fifo and verify new occupancy of 1
 		Propeller::AssertTrue(propeller << 'T');
 		Propeller::AreEqual(2, propeller << 'L');
 		propeller << 'Q' << 'o';
-		propeller.readChars(&state, sizeof(state));
+		propeller.readBytes(&state, sizeof(state));
 		Assert::AreEqual(1, state.occupancy);
 
 		// take value from fifo and verify new occupancy of 0
 		Propeller::AssertTrue(propeller << 'T');
 		Propeller::AreEqual(3, propeller << 'L');
 		propeller << 'Q' << 'o';
-		propeller.readChars(&state, sizeof(state));
+		propeller.readBytes(&state, sizeof(state));
 		Assert::AreEqual(0, state.occupancy);
 	}
 
@@ -172,28 +172,28 @@ public:
 
 		// query fifo state and verify occupancy of 3
 		propeller << 'Q' << 'o';
-		propeller.readChars(&state, sizeof(state));
+		propeller.readBytes(&state, sizeof(state));
 		Assert::AreEqual(3, state.occupancy);
 
 		// Propeller value from fifo and verify new occupancy of 2
 		Propeller::AssertTrue(propeller << 'T');
 		Propeller::AreEqual(1, propeller << 'L');
 		propeller << 'Q' << 'o';
-		propeller.readChars(&state, sizeof(state));
+		propeller.readBytes(&state, sizeof(state));
 		Assert::AreEqual(2, state.occupancy);
 
 		// take value from fifo and verify new occupancy of 1
 		Propeller::AssertTrue(propeller << 'T');
 		Propeller::AreEqual(2, propeller << 'L');
 		propeller << 'Q' << 'o';
-		propeller.readChars(&state, sizeof(state));
+		propeller.readBytes(&state, sizeof(state));
 		Assert::AreEqual(1, state.occupancy);
 
 		// take value from fifo and verify new occupancy of 0
 		Propeller::AssertTrue(propeller << 'T');
 		Propeller::AreEqual(12, propeller << 'L');
 		propeller << 'Q' << 'o';
-		propeller.readChars(&state, sizeof(state));
+		propeller.readBytes(&state, sizeof(state));
 		Assert::AreEqual(0, state.occupancy);
 	}
 
@@ -215,28 +215,28 @@ public:
 
 		// query fifo state and verify occupancy of 3
 		propeller << 'Q' << 'o';
-		propeller.readChars(&state, sizeof(state));
+		propeller.readBytes(&state, sizeof(state));
 		Assert::AreEqual(3, state.occupancy);
 
 		// Propeller value from fifo and verify new occupancy of 2
 		Propeller::AssertTrue(propeller << 'T');
 		Propeller::AreEqual(1, propeller << 'L');;
 		propeller << 'Q' << 'o';
-		propeller.readChars(&state, sizeof(state));
+		propeller.readBytes(&state, sizeof(state));
 		Assert::AreEqual(2, state.occupancy);
 
 		// take value from fifo and verify new occupancy of 1
 		Propeller::AssertTrue(propeller << 'T');
 		Propeller::AreEqual(7, propeller << 'L');
 		propeller << 'Q' << 'o';
-		propeller.readChars(&state, sizeof(state));
+		propeller.readBytes(&state, sizeof(state));
 		Assert::AreEqual(1, state.occupancy);
 
 		// take value from fifo and verify new occupancy of 0
 		Propeller::AssertTrue(propeller << 'T');
 		Propeller::AreEqual(12, propeller << 'L');
 		propeller << 'Q' << 'o';
-		propeller.readChars(&state, sizeof(state));
+		propeller.readBytes(&state, sizeof(state));
 		Assert::AreEqual(0, state.occupancy);
 	}
 
@@ -247,13 +247,13 @@ public:
 		Propeller::AssertTrue(propeller << 'I' << 5 << 7 << 12 << 0);
 
 		propeller << 'Q' << 'o';
-		propeller.readChars(&state, sizeof(state));
+		propeller.readBytes(&state, sizeof(state));
 		Propeller::IsFalse(state.eof);
 
 		// send eof to fifo and verify eof is now true
 		propeller << 'E';
 		propeller << 'Q' << 'o';
-		propeller.readChars(&state, sizeof(state));
+		propeller.readBytes(&state, sizeof(state));
 		Propeller::IsTrue(state.eof);
 	}
 
@@ -267,13 +267,13 @@ public:
 
 		// verify that eof is currently false
 		propeller << 'Q' << 'o';
-		propeller.readChars(&state, sizeof(state));
+		propeller.readBytes(&state, sizeof(state));
 		Propeller::IsFalse(state.eof);
 
 		// send eof to fifo and verify eof is now true
 		propeller << 'E';
 		propeller << 'Q' << 'o';
-		propeller.readChars(&state, sizeof(state));
+		propeller.readBytes(&state, sizeof(state));
 		Propeller::IsTrue(state.eof);
 	}
 

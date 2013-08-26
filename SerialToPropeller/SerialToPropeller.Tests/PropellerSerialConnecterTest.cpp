@@ -15,7 +15,7 @@ private:
 
 public:
 
-	SerialToPropellerTests() : propeller(L"COM4") {}
+	SerialToPropellerTests() : propeller("COM4") {}
 
 	TEST_METHOD(TestStringPutGet) {
 		std::string stringToSend = "Hello!";
@@ -36,9 +36,8 @@ public:
 
 	TEST_METHOD(Test_PutInt32_GetInt32) {
 		__int32 x;
-		propeller << 'L';
-		propeller.writeInt32(42);
-		x = propeller.readInt32();
+		propeller << 'L' << 42;
+		propeller >> x;
 		Assert::AreEqual(42, x);
 	}
 
@@ -50,25 +49,11 @@ public:
 		Assert::AreEqual(42, i);
 	}
 
-	TEST_METHOD(TestTwoInt32PutGet) {
+	TEST_METHOD(TestPutTwoInt32GetTwoInt32) {
 		__int32 x, y;
 		propeller << 'T';
-		propeller << 5;
-		propeller << 7;
-		propeller >> x;
-		propeller >> y;
-		Assert::AreEqual(5, x);
-		Assert::AreEqual(7, y);
-	}
-
-
-	TEST_METHOD(Test_WriteInt32_ReadInt32_TwoInts) {
-		__int32 x, y;
-		propeller << 'T';
-		propeller.writeInt32(5);
-		propeller.writeInt32(7);
-		x = propeller.readInt32();
-		y = propeller.readInt32();
+		propeller << 5 << 7;
+		propeller >> x >> y;
 		Assert::AreEqual(5, x);
 		Assert::AreEqual(7, y);
 	}
