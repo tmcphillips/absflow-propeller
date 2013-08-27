@@ -21,12 +21,12 @@ pub Run | ok
   repeat
     ok := false
 
-    if _input_1.Take
-      _output.Put(_input_1.LastTaken)
+    if _input_1.Pop
+      _output.Push(_input_1.LastPopped)
       ok := true
       
-    if _input_2.Take
-      _output.Put(_input_2.LastTaken)
+    if _input_2.Pop
+      _output.Push(_input_2.LastPopped)
       ok := true
 
   while ok

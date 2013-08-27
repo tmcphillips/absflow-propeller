@@ -24,12 +24,12 @@ pub Start(input_base, output_1_base, output_2_base, output_3_base, output_4_base
 pub Run | input_value
   repeat
 
-    if _input_fifo.Take  
-      input_value := _input_fifo.LastTaken
-      _output_1_fifo.Put(input_value) 
-      _output_2_fifo.Put(input_value) 
-      _output_3_fifo.Put(input_value)
-      _output_4_fifo.Put(input_value)
+    if _input_fifo.Pop  
+      input_value := _input_fifo.LastPopped
+      _output_1_fifo.Push(input_value) 
+      _output_2_fifo.Push(input_value) 
+      _output_3_fifo.Push(input_value)
+      _output_4_fifo.Push(input_value)
 
     else
       Shutdown

@@ -45,13 +45,13 @@ PUB Main | i, depth, f, v
       "P":  'Put long v to input fifo f
         term.ReadLong(@f)
         term.ReadLong(@v)
-        term.WriteLong(fifo[f].put(v))             
+        term.WriteLong(fifo[f].Push(v))             
 
       "T":  'Take character from output fifo
-        term.WriteLong(fifo[C].Take) 
+        term.WriteLong(fifo[C].Pop) 
 
       "L":  'Return last character taken from each fifo
-        term.WriteLong(fifo[C].LastTaken)
+        term.WriteLong(fifo[C].LastPopped)
         
       "E":  'Signal end of flow on input fifo f
         term.ReadLong(@f) 

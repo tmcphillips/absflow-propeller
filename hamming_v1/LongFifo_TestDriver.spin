@@ -32,13 +32,13 @@ PUB Main | i, sem_id, fifo_depth, value
         
       "P":  'Put long to fifo
         term.ReadLong(@value)
-        term.WriteLong(fifo.put(value))                
+        term.WriteLong(fifo.Push(value))                
 
       "T":  'Take character from fifo 
-        term.WriteLong(fifo.Take)
+        term.WriteLong(fifo.Pop)
 
       "L":  'Return last character taken from fifo
-        term.WriteLong(fifo.LastTaken)
+        term.WriteLong(fifo.LastPopped)
         
       "E":  'Signal end of flow
         fifo.EndFlow

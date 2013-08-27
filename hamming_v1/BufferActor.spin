@@ -18,8 +18,8 @@ pub Start(input_fifo_base, output_fifo_base) : success
 pub Run | inputValue
   repeat
                                                  
-    if _input_fifo.Take
-      _output_fifo.Put(_input_fifo.LastTaken)
+    if _input_fifo.Pop
+      _output_fifo.Push(_input_fifo.LastPopped)
       
     else
       Shutdown

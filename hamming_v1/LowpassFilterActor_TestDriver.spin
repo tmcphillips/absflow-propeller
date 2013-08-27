@@ -44,13 +44,13 @@ PUB Main | i, input_fifo_depth, output_fifo_depth, value, cutoff_value, shutdown
         
       "P":  'Put long to input fifo
         term.ReadLong(@value)
-        term.WriteLong(input_fifo.put(value))                
+        term.WriteLong(input_fifo.Push(value))                
 
       "T":  'Take character from output fifo
-        term.WriteLong(output_fifo.Take)
+        term.WriteLong(output_fifo.Pop)
 
       "L":  'Return last character taken from fifo
-        term.WriteLong(output_fifo.LastTaken)
+        term.WriteLong(output_fifo.LastPopped)
         
       "E":  'Signal end of flow
         input_fifo.EndFlow

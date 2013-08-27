@@ -60,7 +60,7 @@ Pub FlowEnded
   result := long[flow_ended]
   lockclr(long[sem_id])
     
-PUB Put(value)
+PUB Push(value)
   repeat
     repeat until not lockset(long[sem_id])
                            
@@ -84,7 +84,7 @@ PUB Put(value)
     
       lockclr(long[sem_id])
 
-PUB Take
+PUB Pop
   repeat
   
     repeat until not lockset(long[sem_id])
@@ -110,5 +110,5 @@ PUB Take
     
       lockclr(long[sem_id])
 
-Pub LastTaken
+Pub LastPopped
   return _last_taken

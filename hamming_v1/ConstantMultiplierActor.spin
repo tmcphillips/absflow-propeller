@@ -1,32 +1,31 @@
 OBJ
    
-  _input_fifo   : "LongFifo"
-  _output_fifo  : "LongFifo"
+  input_fifo   : "LongFifo"
+  output_fifo  : "LongFifo"
    
 VAR
   byte cog
   long stack[50]
   byte running  
   
-pub Start(input_fifo_base, output_fifo_base, multiplier) : success
+pub Start(input_base, output_base, multiplier) : success
   stop
-  _input_fifo.SetBaseAddress(input_fifo_base)
-  _output_fifo.SetBaseAddress(output_fifo_base)
+  input_fifo.SetBaseAddress(input_base)
+  output_fifo.SetBaseAddress(output_base)
   running := true
   success := (cog := cognew(Run(multiplier), @stack) + 1)
 
 pub Run(multiplier) | product
   repeat
 
-    if _input_fifo.Take 
-      product := _input_fifo.LastTaken * multiplier
-      _output_fifo.Put(product)   
+    if input_fifo.Pop 
+      output_fifo.Push(input_fifo.LastPopped * multiplier)   
 
     else                  
       Shutdown
       
 pri Shutdown
-  _output_fifo.EndFlow
+  output_fifo.EndFlow
   running := false
   Stop
 

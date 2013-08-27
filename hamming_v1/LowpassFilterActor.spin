@@ -18,11 +18,11 @@ pub Start(input_fifo_base, output_fifo_base, cutoff, shutdownOnOverage) : succes
 pri Run(cutoff, shutdownOnOverage) | input_value
   repeat
     
-    if _input_fifo.Take
-      input_value := _input_fifo.LastTaken
+    if _input_fifo.Pop
+      input_value := _input_fifo.LastPopped
 
       if input_value =< cutoff
-        _output_fifo.Put(input_value)
+        _output_fifo.Push(input_value)
 
       else
         if shutdownOnOverage
@@ -33,7 +33,7 @@ pri Run(cutoff, shutdownOnOverage) | input_value
       
 pri Shutdown
   _output_fifo.EndFlow
-  repeat while _input_fifo.Take
+  repeat while _input_fifo.Pop
   running := false    
   Stop
             
