@@ -25,13 +25,15 @@ pub Run | a, b, c, have_a, have_b, is_first, last_c
       
   repeat
       
-    if (NOT have_a) AND fifo_a.Take
-      a := fifo_a.LastTaken
-      have_a := true
-
-    if (NOT have_b) AND fifo_b.Take
-      b := fifo_b.LastTaken
-      have_b := true
+    if (NOT have_a)
+      if fifo_a.Take
+        a := fifo_a.LastTaken
+        have_a := true
+      
+    if (NOT have_b)
+      if fifo_b.Take
+        b := fifo_b.LastTaken
+        have_b := true
 
     ifnot have_a OR have_b
       quit
