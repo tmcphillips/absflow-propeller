@@ -1,46 +1,37 @@
 OBJ
    
-  _input_1   : "LongFifo"
-  _input_2   : "LongFifo"
-  _output    : "LongFifo"
+  fifo_a : "LongFifo"
+  fifo_b : "LongFifo"
+  fifo_c : "LongFifo"
    
 VAR
   byte cog
   long stack[50]
   byte running 
-  byte first
-  long last
-  long a
-  long b
-  long c
-  byte have_a
-  byte have_b 
   
-pub Start(input_1_base, input_2_base, output_base) : success
+pub Start(base_a, base_b, base_c) : success
   stop
-  _input_1.SetBaseAddress(input_1_base)
-  _input_2.SetBaseAddress(input_2_base)
-  _output.SetBaseAddress(output_base)
+  fifo_a.SetBaseAddress(base_a)
+  fifo_b.SetBaseAddress(base_b)
+  fifo_c.SetBaseAddress(base_c)
   running := true
   success := (cog := cognew(Run, @stack) + 1)
 
-pub Run  
+pub Run | a, b, c, have_a, have_b, is_first, last_c  
 
-  first := true
-  have_a := false
-  have_b := false
+  have_a   := false
+  have_b   := false
+  is_first := true
       
   repeat
       
-    ifnot have_a
-      if _input_1.Take
-        a := _input_1.LastTaken
-        have_a := true
+    if (NOT have_a) AND fifo_a.Take
+      a := fifo_a.LastTaken
+      have_a := true
 
-    ifnot have_b
-      if _input_2.Take
-        b := _input_2.LastTaken
-        have_b := true
+    if (NOT have_b) AND fifo_b.Take
+      b := fifo_b.LastTaken
+      have_b := true
 
     ifnot have_a OR have_b
       quit
@@ -66,15 +57,15 @@ pub Run
       have_a := false
       have_b := false
 
-    if c <> last OR first
-      first := false
-      _output.Put(c) 
-      last := c
+    if c <> last_c OR is_first
+      is_first := false
+      fifo_c.Put(c) 
+      last_c := c
       
   Shutdown
 
 pri Shutdown
-  _output.EndFlow
+  fifo_c.EndFlow
   running := false 
   Stop
 
