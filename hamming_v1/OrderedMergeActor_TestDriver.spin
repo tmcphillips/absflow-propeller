@@ -18,8 +18,8 @@ OBJ
 
 VAR
   
-  long struct[3*fifo#STRUCT_SIZE]
-  long buffer[3*MAX_DEPTH]
+  long fifo_struct[3*fifo#STRUCT_SIZE]
+  long fifo_buffer[3*MAX_DEPTH]
   long sem[3]
   
 
@@ -27,8 +27,8 @@ PUB Main | i, depth, f, v
 
   term.Start(115_200)
 
-  repeat i from A to C
-    sem[i] := locknew
+  repeat f from A to C
+    sem[f] := locknew
 
   repeat
                     
@@ -36,13 +36,13 @@ PUB Main | i, depth, f, v
     
       "I":  'Initialize input and output fifos with requested size
 
-        repeat i from A to C
+        repeat f from A to C
           term.ReadLong(@depth)                                                                     
-          fifo[i].Initialize(@struct[i*fifo#STRUCT_SIZE], @buffer[i*MAX_DEPTH], depth, sem[i]) 
+          fifo[f].Initialize(@fifo_struct[f*fifo#STRUCT_SIZE], @fifo_buffer[f*MAX_DEPTH], depth, sem[f]) 
         
-        term.WriteLong(actor.Start(@struct[A*fifo#STRUCT_SIZE],@struct[B*fifo#STRUCT_SIZE],@struct[C*fifo#STRUCT_SIZE]))
+        term.WriteLong(actor.Start(@fifo_struct[A*fifo#STRUCT_SIZE],@fifo_struct[B*fifo#STRUCT_SIZE],@fifo_struct[C*fifo#STRUCT_SIZE]))
         
-      "P":  'Put long to input fifo
+      "P":  'Put long v to input fifo f
         term.ReadLong(@f)
         term.ReadLong(@v)
         term.WriteLong(fifo[f].put(v))             
@@ -53,7 +53,7 @@ PUB Main | i, depth, f, v
       "L":  'Return last character taken from each fifo
         term.WriteLong(fifo[C].LastTaken)
         
-      "E":  'Signal end of flow
+      "E":  'Signal end of flow on input fifo f
         term.ReadLong(@f) 
         fifo[f].EndFlow                  
     
@@ -67,14 +67,14 @@ PUB Main | i, depth, f, v
         term.WriteLong(true)
 
       "W":  'Wait for input queues to empty
-        repeat i from A to B
-          repeat while long[@struct[i*fifo#STRUCT_SIZE]][fifo#OCCUPANCY_OFFSET] > 0
+        repeat f from A to B
+          repeat while long[@fifo_struct[f*fifo#STRUCT_SIZE]][fifo#OCCUPANCY_OFFSET] > 0
         term.WriteLong(true)
   
-      "Q":  'Query fifo data structure
+      "Q":  'Query fifo data structure f
         term.ReadLong(@f)
         repeat i from 0 to 31
-          term.Char(byte[@struct[f*fifo#STRUCT_SIZE]][i])  
+          term.Char(byte[@fifo_struct[f*fifo#STRUCT_SIZE]][i])  
 
                       
                 
