@@ -5,9 +5,9 @@ CON
   _xinfreq      = 5_000_000
 
   LOAD          = 50
-  FIFO_DEPTH    = 9
+  FIFO_DEPTH    = 100
   FACTOR        = 5
-  OUTPUT_MAX    = 100
+  OUTPUT_MAX    = 30
   
   
 OBJ
@@ -69,7 +69,7 @@ PUB Main | in, x, out, i
   fifo[7].Initialize(@fifo_7_struct, @fifo_7_buffer, FIFO_DEPTH, 0)
   fifo[8].Initialize(@fifo_8_struct, @fifo_8_buffer, FIFO_DEPTH, 0)
         
-  filtered_fork.Start(@fifo_0_struct, @fifo_1_struct, @fifo_2_struct, @fifo_3_struct, @fifo_4_struct, OUTPUT_MAX, 1)
+  filtered_fork.Start(@fifo_0_struct, @fifo_1_struct, @fifo_2_struct, @fifo_3_struct, @fifo_4_struct, OUTPUT_MAX, true)
   times_2.Start(@fifo_1_struct, @fifo_5_struct, 2)
   times_3.Start(@fifo_2_struct, @fifo_6_struct, 3)
   times_5.Start(@fifo_3_struct, @fifo_7_struct, 5)
@@ -77,6 +77,9 @@ PUB Main | in, x, out, i
   merge_2_3_5.Start(@fifo_7_struct, @fifo_8_struct, @fifo_0_struct)
 
   fifo[0].Put(1)
+
+  term.Str(string("starting"))
+  term.NewLine
 
   repeat
   
@@ -88,7 +91,7 @@ PUB Main | in, x, out, i
 
   term.Str(string("done"))
   term.NewLine
-  
+
   repeat while filtered_fork.IsRunning
   repeat while times_2.IsRunning
   repeat while times_3.IsRunning
@@ -100,4 +103,7 @@ PUB Main | in, x, out, i
     term.Dec(i)
     term.Str(string(" "))
     term.Dec(fifo[i].FlowEnded)
-    term.NewLine  
+    term.NewLine
+
+  term.Str(string("Exiting..."))
+  term.NewLine     
