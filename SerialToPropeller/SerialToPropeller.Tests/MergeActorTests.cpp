@@ -38,7 +38,7 @@ public:
 	TEST_METHOD(TestInitializeActor)
 	{ 	 
 		// initialize actor
-		Propeller::AssertTrue(propeller << 'I' << 5 << 6 << 7 << 8);
+		Propeller::AssertTrue(propeller << 'I' << 5 << 6 << 7);
 
 		// verify initial state of input fifos
 		propeller << 'Q' << 1;
@@ -55,18 +55,11 @@ public:
 		Assert::AreEqual(0, state.occupancy);
 		Assert::AreEqual(0, state.eof);
 
-		propeller << 'Q' << 3;
-		propeller.readBytes(&state, sizeof(state)); 
-		Assert::AreEqual(2, state.semid);
-		Assert::AreEqual(7, state.depth);
-		Assert::AreEqual(0, state.occupancy);
-		Assert::AreEqual(0, state.eof);
-
 		// verify initial state of output fifo
 		propeller << 'Q' << 0;
 		propeller.readBytes(&state, sizeof(state)); 
-		Assert::AreEqual(3, state.semid);
-		Assert::AreEqual(8, state.depth);
+		Assert::AreEqual(2, state.semid);
+		Assert::AreEqual(7, state.depth);
 		Assert::AreEqual(0, state.occupancy);
 		Assert::AreEqual(0, state.eof);
 	}
@@ -74,7 +67,7 @@ public:
 	TEST_METHOD(TestPut)
 	{
 		// initialize actor
-		Propeller::AssertTrue(propeller << 'I' << 5 << 6 << 7 << 8);
+		Propeller::AssertTrue(propeller << 'I' << 5 << 6 << 7);
 
 		// query output fifo state and verify occupancy of 0
 		propeller << 'Q' << 0;
@@ -98,21 +91,12 @@ public:
 		propeller << 'Q' << 0;
 		propeller.readBytes(&state, sizeof(state)); 
 		Assert::AreEqual(2, state.occupancy);
-
-		// put second value to the input fifo and verify output fifo occupancy of two
-		Propeller::AssertTrue(propeller << 'P' << 3 << 100);
-		Propeller::AssertTrue(propeller << 'W');
-
-		// query output fifo state and verify occupancy of 2
-		propeller << 'Q' << 0;
-		propeller.readBytes(&state, sizeof(state)); 
-		Assert::AreEqual(3, state.occupancy);
 	}
 
 	TEST_METHOD(TestTake)
 	{
 		// initialize actor
-		Propeller::AssertTrue(propeller << 'I' << 5 << 6 << 7 << 8);
+		Propeller::AssertTrue(propeller << 'I' << 5 << 6 << 7);
 
 		// put three values to input fifo
 		Propeller::AssertTrue(propeller << 'P' << 1 << 1);
@@ -120,13 +104,10 @@ public:
 		Propeller::AssertTrue(propeller << 'P' << 2 << 10);
 		Propeller::AssertTrue(propeller << 'W');
 
-		Propeller::AssertTrue(propeller << 'P' << 3 << 100);
-		Propeller::AssertTrue(propeller << 'W');
-
-		// query output fifo state and verify occupancy of 3
+		// query output fifo state and verify occupancy of 2
 		propeller << 'Q' << 0;
 		propeller.readBytes(&state, sizeof(state)); 
-		Assert::AreEqual(3, state.occupancy);
+		Assert::AreEqual(2, state.occupancy);
 
 		// take value from fifo
 		Propeller::AssertTrue(propeller << 'T');
@@ -135,10 +116,6 @@ public:
 		// take value from fifo
 		Propeller::AssertTrue(propeller << 'T');
 		Propeller::AreEqual(10, propeller << 'L');
-
-		// take value from fifo
-		Propeller::AssertTrue(propeller << 'T');
-		Propeller::AreEqual(100, propeller << 'L');
 
 		// query output fifo state and verify occupancy of 0
 		propeller << 'Q' << 0;
@@ -149,7 +126,7 @@ public:
 	TEST_METHOD(TestEndFlow_EmptyInputFifos)
 	{
 		// initialize actor
-		Propeller::AssertTrue(propeller << 'I' << 5 << 6 << 7 << 8);
+		Propeller::AssertTrue(propeller << 'I' << 5 << 6 << 7);
 
 		propeller << 'Q' << 0;
 		propeller.readBytes(&state, sizeof(state)); 
@@ -163,24 +140,18 @@ public:
 		propeller << 'E' << 2;
 		propeller << 'Q' << 0;
 		propeller.readBytes(&state, sizeof(state)); 
-		Propeller::IsFalse(state.eof);
-
-		propeller << 'E' << 3;
-		propeller << 'Q' << 0;
-		propeller.readBytes(&state, sizeof(state)); 
 		Propeller::IsTrue(state.eof);
 	}
 
 	TEST_METHOD(TestEndFlow_OccupiedFifo)
 	{
 		// initialize actor
-		Propeller::AssertTrue(propeller << 'I' << 5 << 6 << 7 << 8);
+		Propeller::AssertTrue(propeller << 'I' << 5 << 6 << 7);
 
 		// put three values to input fifo
 		// put one value to each of the three inputs
 		Propeller::AssertTrue(propeller << 'P' << 1 << 1);
 		Propeller::AssertTrue(propeller << 'P' << 2 << 10);
-		Propeller::AssertTrue(propeller << 'P' << 3 << 100);
 
 		// wait for the actor to consume all inputs
 		Propeller::AssertTrue(propeller << 'W');
@@ -198,23 +169,17 @@ public:
 		propeller << 'E' << 2;
 		propeller << 'Q' << 0;
 		propeller.readBytes(&state, sizeof(state)); 
-		Propeller::IsFalse(state.eof);
-
-		propeller << 'E' << 3;
-		propeller << 'Q' << 0;
-		propeller.readBytes(&state, sizeof(state)); 
 		Propeller::IsTrue(state.eof);
 	}
 
 	TEST_METHOD(Test_TakeAfterEndFlow_OccupiedFifo)
 	{
 		// initialize actor
-		Propeller::AssertTrue(propeller << 'I' << 5 << 6 << 7 << 8);
+		Propeller::AssertTrue(propeller << 'I' << 5 << 6 << 7);
 		
 		// put one value to each of the three inputs
 		Propeller::AssertTrue(propeller << 'P' << 1 << 1);
 		Propeller::AssertTrue(propeller << 'P' << 2 << 10);
-		Propeller::AssertTrue(propeller << 'P' << 3 << 100);
 
 		// wait for the actor to consume all inputs
 		Propeller::AssertTrue(propeller << 'W');
@@ -222,10 +187,8 @@ public:
 		// end flow on each input
 		propeller << 'E' << 1;
 		propeller << 'E' << 2;
-		propeller << 'E' << 3;
 		
 		// take three values from actor output and confirm success for each
-		Propeller::AssertTrue(propeller << 'T');
 		Propeller::AssertTrue(propeller << 'T');
 		Propeller::AssertTrue(propeller << 'T');
 
