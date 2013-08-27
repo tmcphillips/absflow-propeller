@@ -8,28 +8,69 @@ VAR
   byte cog
   long stack[50]
   byte running 
+  byte first
+  long last
+  long a
+  long b
+  long c
+  byte have_a
+  byte have_b 
   
 pub Start(input_1_base, input_2_base, output_base) : success
   stop
   _input_1.SetBaseAddress(input_1_base)
   _input_2.SetBaseAddress(input_2_base)
   _output.SetBaseAddress(output_base)
+  running := true
   success := (cog := cognew(Run, @stack) + 1)
 
-pub Run | ok
-  running := true
-  repeat
-    ok := false
+pub Run  
 
-    if _input_1.Take
-      _output.Put(_input_1.LastTaken)
-      ok := true
+  first := true
+  have_a := false
+  have_b := false
       
-    if _input_2.Take
-      _output.Put(_input_2.LastTaken)
-      ok := true
+  repeat
+      
+    ifnot have_a
+      if _input_1.Take
+        a := _input_1.LastTaken
+        have_a := true
 
-  while ok
+    ifnot have_b
+      if _input_2.Take
+        b := _input_2.LastTaken
+        have_b := true
+
+    ifnot have_a OR have_b
+      quit
+
+    ifnot have_a
+      c := b
+      have_b := false
+
+    elseifnot have_b
+      c := a
+      have_a := false
+
+    elseif a < b
+      c := a
+      have_a := false
+
+    elseif b < a
+      c := b
+      have_b := false
+
+    elseif a == b
+      c := a
+      have_a := false
+      have_b := false
+
+    if c <> last OR first
+      first := false
+      _output.Put(c) 
+      last := c
+      
   Shutdown
 
 pri Shutdown
