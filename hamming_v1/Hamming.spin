@@ -4,10 +4,8 @@ CON
   _clkmode      = xtal1 + pll16x
   _xinfreq      = 5_000_000
 
-  LOAD          = 50
   FIFO_DEPTH    = 100
-  FACTOR        = 5
-  OUTPUT_MAX    = 30
+  OUTPUT_MAX    = 100
   
   
 OBJ
