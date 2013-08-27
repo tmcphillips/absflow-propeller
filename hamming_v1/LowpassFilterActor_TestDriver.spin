@@ -8,7 +8,7 @@ CON
   
 OBJ
    
-  buffer_actor : "LowpassFilterActor"
+  actor : "LowpassFilterActor"
   input_fifo   : "LongFifo"
   output_fifo  : "LongFifo"
   term         : "SerialConnection"
@@ -40,7 +40,7 @@ PUB Main | i, input_fifo_depth, output_fifo_depth, value, cutoff_value, shutdown
         term.ReadLong(@shutdown_on_overage) 
         input_fifo.Initialize(@input_fifo_struct, @input_fifo_buffer, input_fifo_depth, input_sem_id)
         output_fifo.Initialize(@output_fifo_struct, @output_fifo_buffer, output_fifo_Depth, output_sem_id)
-        term.WriteLong(buffer_actor.Start(@input_fifo_struct, @output_fifo_struct, cutoff_value, shutdown_on_overage))
+        term.WriteLong(actor.Start(@input_fifo_struct, @output_fifo_struct, cutoff_value, shutdown_on_overage))
         
       "P":  'Put long to input fifo
         term.ReadLong(@value)
@@ -60,7 +60,7 @@ PUB Main | i, input_fifo_depth, output_fifo_depth, value, cutoff_value, shutdown
 
       "D":  'Destroy actor
         input_fifo.EndFlow
-        repeat while buffer_actor.IsRunning
+        repeat while actor.IsRunning
         term.WriteLong(true)
 
       "W":  'Wait for input queue to empty

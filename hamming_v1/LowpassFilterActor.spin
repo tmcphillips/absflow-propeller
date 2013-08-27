@@ -12,10 +12,10 @@ pub Start(input_fifo_base, output_fifo_base, cutoff, shutdownOnOverage) : succes
   stop
   _input_fifo.SetBaseAddress(input_fifo_base)
   _output_fifo.SetBaseAddress(output_fifo_base)
+  running := true
   success := (cog := cognew(Run(cutoff, shutdownOnOverage), @stack) + 1)
 
 pri Run(cutoff, shutdownOnOverage) | input_value
-  running := true
   repeat
     
     if _input_fifo.Take
@@ -25,7 +25,7 @@ pri Run(cutoff, shutdownOnOverage) | input_value
         _output_fifo.Put(input_value)
 
       else
-        if shutdownOnOverage <> 0
+        if shutdownOnOverage
           Shutdown 
 
     else    

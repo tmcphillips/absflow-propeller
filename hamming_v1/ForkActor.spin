@@ -18,10 +18,10 @@ pub Start(input_base, output_1_base, output_2_base, output_3_base, output_4_base
   _output_2_fifo.SetBaseAddress(output_2_base)
   _output_3_fifo.SetBaseAddress(output_3_base)
   _output_4_fifo.SetBaseAddress(output_4_base)
+  running := true
   success := (cog := cognew(Run, @stack) + 1)
 
 pub Run | input_value
-  running := true
   repeat
 
     if _input_fifo.Take  

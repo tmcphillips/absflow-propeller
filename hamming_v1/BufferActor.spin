@@ -12,10 +12,10 @@ pub Start(input_fifo_base, output_fifo_base) : success
   'stop
   _input_fifo.SetBaseAddress(input_fifo_base)
   _output_fifo.SetBaseAddress(output_fifo_base)
+  running := true
   success := (cog := cognew(Run, @stack) + 1)
 
 pub Run | inputValue
-  running := true
   repeat
                                                  
     if _input_fifo.Take
