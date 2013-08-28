@@ -23,7 +23,7 @@ VAR
   long sem[3]
   
 
-PUB Main | i, depth, f, v
+PUB Main | i, depth, f, value
 
   term.Start(115_200)
 
@@ -44,14 +44,12 @@ PUB Main | i, depth, f, v
         
       "P":  'Put long v to input fifo f
         term.ReadLong(@f)
-        term.ReadLong(@v)
-        term.WriteLong(fifo[f].Push(v))             
+        term.ReadLong(@value)
+        term.WriteLong(fifo[f].Push(value))             
 
       "T":  'Take character from output fifo
-        term.WriteLong(fifo[C].Pop) 
-
-      "L":  'Return last character taken from each fifo
-        term.WriteLong(fifo[C].LastPopped)
+        term.WriteLong(fifo[C].Pop(@value)) 
+        term.WriteLong(value)
         
       "E":  'Signal end of flow on input fifo f
         term.ReadLong(@f) 

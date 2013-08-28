@@ -74,26 +74,18 @@ PUB Main | i, value, input_fifo_depth, output_fifo_1_depth, output_fifo_2_depth,
         term.ReadLong(@option)
         case option
           1:
-            term.WriteLong(output_1_fifo.Pop)
+            term.WriteLong(output_1_fifo.Pop(@value))
+            term.WriteLong(value)
           2:
-            term.WriteLong(output_2_fifo.Pop)
+            term.WriteLong(output_2_fifo.Pop(@value))
+           term.WriteLong(value)
           3:
-            term.WriteLong(output_3_fifo.Pop)
+            term.WriteLong(output_3_fifo.Pop(@value))
+           term.WriteLong(value)
           4:
-            term.WriteLong(output_4_fifo.Pop)
+            term.WriteLong(output_4_fifo.Pop(@value))
+           term.WriteLong(value)
 
-      "L":  'Return last character taken from each fifo
-        term.ReadLong(@option)
-        case option
-          1:
-            term.WriteLong(output_1_fifo.LastPopped)
-          2:
-            term.WriteLong(output_2_fifo.LastPopped)
-          3:
-            term.WriteLong(output_3_fifo.LastPopped)
-          4:
-            term.WriteLong(output_4_fifo.LastPopped)
-        
       "E":  'Signal end of flow
         input_fifo.EndFlow
 

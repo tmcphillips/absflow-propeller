@@ -23,9 +23,7 @@ VAR
   long next_read
   long buffer_start
   long buffer_end
-  long flow_ended
-
-  long _last_taken
+  long flow_ended    
   
 PUB Initialize(base_address, buffer_address, fifo_depth, semaphore_id)
   SetBaseAddress(base_address)
@@ -84,14 +82,14 @@ PUB Push(value)
     
       lockclr(long[sem_id])
 
-PUB Pop
+PUB Pop(result_address)
   repeat
   
     repeat until not lockset(long[sem_id])
 
     if long[occupancy] > 0
     
-      _last_taken := long[long[next_read]]
+      long[result_address] := long[long[next_read]]
       long[next_read] += FIFO_WIDTH
       long[occupancy]--
       
@@ -109,6 +107,3 @@ PUB Pop
     else
     
       lockclr(long[sem_id])
-
-Pub LastPopped
-  return _last_taken

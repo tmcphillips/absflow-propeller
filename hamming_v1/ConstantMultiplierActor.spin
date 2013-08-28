@@ -15,11 +15,11 @@ pub Start(input_base, output_base, multiplier) : success
   running := true
   success := (cog := cognew(Run(multiplier), @stack) + 1)
 
-pub Run(multiplier) | product
+pub Run(multiplier) | input_value
   repeat
 
-    if input_fifo.Pop 
-      output_fifo.Push(input_fifo.LastPopped * multiplier)   
+    if input_fifo.Pop(@input_value) 
+      output_fifo.Push(input_value * multiplier)   
 
     else                  
       Shutdown

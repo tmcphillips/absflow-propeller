@@ -46,10 +46,8 @@ PUB Main | i, value, input_fifo_depth, output_fifo_depth, multiplier
         term.WriteLong(input_fifo.Push(value))                
 
       "T":  'Take character from output fifo
-        term.WriteLong(output_fifo.Pop)
-
-      "L":  'Return last character taken from fifo
-        term.WriteLong(output_fifo.LastPopped)
+        term.WriteLong(output_fifo.Pop(@value))
+        term.WriteLong(value)
         
       "E":  'Signal end of flow
         input_fifo.EndFlow

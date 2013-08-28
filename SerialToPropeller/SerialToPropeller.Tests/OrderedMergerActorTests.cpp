@@ -172,7 +172,7 @@ public:
 
 		// take value from fifo
 		Propeller::AssertTrue(propeller << 'T');
-		Propeller::AreEqual(1, propeller << 'L');
+		Propeller::AreEqual(1, propeller);
 
 		// query output fifo state and verify occupancy of 0
 		propeller << 'Q' << C;
@@ -246,8 +246,11 @@ public:
 		propeller << 'E' << B;
 
 		// take three values from actor output and confirm success for each
+		__int32 discard;
 		Propeller::AssertTrue(propeller << 'T');
+		propeller >> discard;
 		Propeller::AssertTrue(propeller << 'T');
+		propeller >> discard;
 
 		// try to take a value from output and confirm failure
 		Propeller::AssertFalse(propeller << 'T');

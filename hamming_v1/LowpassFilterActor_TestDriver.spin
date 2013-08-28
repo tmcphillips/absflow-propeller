@@ -22,7 +22,7 @@ VAR
   long input_sem_id
   long output_sem_id
 
-PUB Main | i, input_fifo_depth, output_fifo_depth, value, cutoff_value, shutdown_on_overage
+PUB Main | i, value, input_fifo_depth, output_fifo_depth, cutoff_value, shutdown_on_overage
 
   term.Start(115_200)
 
@@ -47,10 +47,8 @@ PUB Main | i, input_fifo_depth, output_fifo_depth, value, cutoff_value, shutdown
         term.WriteLong(input_fifo.Push(value))                
 
       "T":  'Take character from output fifo
-        term.WriteLong(output_fifo.Pop)
-
-      "L":  'Return last character taken from fifo
-        term.WriteLong(output_fifo.LastPopped)
+        term.WriteLong(output_fifo.Pop(@value))
+        term.WriteLong(value)
         
       "E":  'Signal end of flow
         input_fifo.EndFlow

@@ -110,12 +110,15 @@ public:
 		Assert::AreEqual(2, state.occupancy);
 
 		// take value from fifo
+		__int32 value;
 		Propeller::AssertTrue(propeller << 'T');
-		Propeller::AreEqual(1, propeller << 'L');
+		propeller >> value;
+		Assert::AreEqual(1, value);
 
 		// take value from fifo
 		Propeller::AssertTrue(propeller << 'T');
-		Propeller::AreEqual(10, propeller << 'L');
+		propeller >> value;
+		Assert::AreEqual(10, value);
 
 		// query output fifo state and verify occupancy of 0
 		propeller << 'Q' << 0;
@@ -188,9 +191,13 @@ public:
 		propeller << 'E' << 1;
 		propeller << 'E' << 2;
 		
+		__int32 value;
+
 		// take three values from actor output and confirm success for each
 		Propeller::AssertTrue(propeller << 'T');
+		propeller >> value;
 		Propeller::AssertTrue(propeller << 'T');
+		propeller >> value;
 
 		// try to take a value from output and confirm failure
 		Propeller::AssertFalse(propeller << 'T');

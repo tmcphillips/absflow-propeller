@@ -15,14 +15,13 @@ pub Start(input_fifo_base, output_fifo_base, cutoff, shutdownOnOverage) : succes
   running := true
   success := (cog := cognew(Run(cutoff, shutdownOnOverage), @stack) + 1)
 
-pri Run(cutoff, shutdownOnOverage) | input_value
+pri Run(cutoff, shutdownOnOverage) | value
   repeat
     
-    if _input_fifo.Pop
-      input_value := _input_fifo.LastPopped
+    if _input_fifo.Pop(@value)
 
-      if input_value =< cutoff
-        _output_fifo.Push(input_value)
+      if value =< cutoff
+        _output_fifo.Push(value)
 
       else
         if shutdownOnOverage
@@ -31,9 +30,9 @@ pri Run(cutoff, shutdownOnOverage) | input_value
     else    
       Shutdown
       
-pri Shutdown
+pri Shutdown | discard
   _output_fifo.EndFlow
-  repeat while _input_fifo.Pop
+  repeat while _input_fifo.Pop(@discard)
   running := false    
   Stop
             

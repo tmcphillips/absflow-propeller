@@ -21,15 +21,14 @@ pub Start(input_base, output_1_base, output_2_base, output_3_base, output_4_base
   running := true
   success := (cog := cognew(Run, @stack) + 1)
 
-pub Run | input_value
+pub Run | value
   repeat
 
-    if _input_fifo.Pop  
-      input_value := _input_fifo.LastPopped
-      _output_1_fifo.Push(input_value) 
-      _output_2_fifo.Push(input_value) 
-      _output_3_fifo.Push(input_value)
-      _output_4_fifo.Push(input_value)
+    if _input_fifo.Pop(@value)            
+      _output_1_fifo.Push(value) 
+      _output_2_fifo.Push(value) 
+      _output_3_fifo.Push(value)
+      _output_4_fifo.Push(value)
 
     else
       Shutdown

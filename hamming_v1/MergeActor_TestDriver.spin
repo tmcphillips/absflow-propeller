@@ -65,10 +65,8 @@ PUB Main | i, v, input_fifo_1_depth, input_fifo_2_depth, output_fifo_depth, opti
             term.WriteLong(input_2_fifo.Push(value))             
 
       "T":  'Take character from  output fifo
-        term.WriteLong(output_fifo.Pop) 
-
-      "L":  'Return last character taken from each fifo
-        term.WriteLong(output_fifo.LastPopped)
+        term.WriteLong(output_fifo.Pop(@value)) 
+        term.WriteLong(value)
         
       "E":  'Signal end of flow
         term.ReadLong(@option)

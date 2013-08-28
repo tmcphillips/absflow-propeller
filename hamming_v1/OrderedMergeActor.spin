@@ -26,13 +26,11 @@ pub Run | a, b, c, have_a, have_b, is_first, last_c
   repeat
       
     if (NOT have_a)
-      if fifo_a.Pop
-        a := fifo_a.LastPopped
+      if fifo_a.Pop(@a)
         have_a := true
       
     if (NOT have_b)
-      if fifo_b.Pop             
-        b := fifo_b.LastPopped
+      if fifo_b.Pop(@b)
         have_b := true
 
     ifnot have_a OR have_b

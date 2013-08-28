@@ -17,16 +17,16 @@ pub Start(input_1_base, input_2_base, output_base) : success
   running := true
   success := (cog := cognew(Run, @stack) + 1)
 
-pub Run | ok
+pub Run | ok, value
   repeat
     ok := false
 
-    if _input_1.Pop
-      _output.Push(_input_1.LastPopped)
+    if _input_1.Pop(@value)
+      _output.Push(value)
       ok := true
       
-    if _input_2.Pop
-      _output.Push(_input_2.LastPopped)
+    if _input_2.Pop(@value)
+      _output.Push(value)
       ok := true
 
   while ok
