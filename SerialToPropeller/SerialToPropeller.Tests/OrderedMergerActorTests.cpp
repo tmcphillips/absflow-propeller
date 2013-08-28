@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "CppUnitTest.h"
+#include <vector>
 
 #include "SerialConnection.h" 
 #include "PropAssert.h"
@@ -255,4 +256,134 @@ public:
 		// try to take a value from output and confirm failure
 		Propeller::AssertFalse(propeller << 'T');
 	}
+
+	TEST_METHOD(TestTwoStreams_NoDuplicates)
+	{
+		// initialize actor
+		Propeller::AssertTrue(propeller << 'I' << 10 << 10 << 20);
+
+		// put values to input a
+		for (__int32 i : {1, 3, 7, 8, 10, 12, 15}) {
+			Propeller::AssertTrue(propeller << 'P' << A << i);
+		}
+
+		// put values to input b
+		for (__int32 i : {2, 4, 5, 6, 9, 11, 13, 14, 16}) {
+			Propeller::AssertTrue(propeller << 'P' << B << i);
+		}
+
+		// end flow on each input
+		propeller << 'E' << A;
+		propeller << 'E' << B;
+
+		// take value from fifo
+		std::vector<__int32> v;
+		__int32 success, value;
+		while (true) {
+			propeller << 'T';
+			propeller >> success >> value;
+			if (!success) break;
+			v.push_back(value);
+		}
+
+		Assert::IsTrue(v == std::vector<__int32>({1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16}));
+	}
+
+	TEST_METHOD(TestTwoStreams_DuplicatesWithinStreams)
+	{
+		// initialize actor
+		Propeller::AssertTrue(propeller << 'I' << 10 << 10 << 20);
+
+		// put values to input a
+		for (__int32 i : {1, 3, 7, 7, 8, 10, 10, 10, 12, 15}) {
+			Propeller::AssertTrue(propeller << 'P' << A << i);
+		}
+
+		// put values to input b
+		for (__int32 i : {2, 4, 4, 5, 6, 9, 11, 13, 13, 13, 14, 15, 16, 16, 16}) {
+			Propeller::AssertTrue(propeller << 'P' << B << i);
+		}
+
+		// end flow on each input
+		propeller << 'E' << A;
+		propeller << 'E' << B;
+
+		// take value from fifo
+		std::vector<__int32> v;
+		__int32 success, value;
+		while (true) {
+			propeller << 'T';
+			propeller >> success >> value;
+			if (!success) break;
+			v.push_back(value);
+		}
+
+		Assert::IsTrue(v == std::vector<__int32>({ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16 }));
+	}
+
+
+	TEST_METHOD(TestTwoStreams_DuplicatesAcrossStreams)
+	{
+		// initialize actor
+		Propeller::AssertTrue(propeller << 'I' << 10 << 10 << 20);
+
+		// put values to input a
+		for (__int32 i : {1, 3, 7, 8, 10, 12, 16}) {
+			Propeller::AssertTrue(propeller << 'P' << A << i);
+		}
+
+		// put values to input b
+		for (__int32 i : {2, 3, 4, 5, 6, 9, 10, 11, 13, 14, 15, 16}) {
+			Propeller::AssertTrue(propeller << 'P' << B << i);
+		}
+
+		// end flow on each input
+		propeller << 'E' << A;
+		propeller << 'E' << B;
+
+		// take value from fifo
+		std::vector<__int32> v;
+		__int32 success, value;
+		while (true) {
+			propeller << 'T';
+			propeller >> success >> value;
+			if (!success) break;
+			v.push_back(value);
+		}
+
+		Assert::IsTrue(v == std::vector<__int32>({ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16 }));
+	}
+
+	TEST_METHOD(TestTwoStreams_DuplicatesWithinAndAcrossStreams)
+	{
+		// initialize actor
+		Propeller::AssertTrue(propeller << 'I' << 20 << 20 << 20);
+
+		// put values to input a
+		for (__int32 i : {1, 3, 3, 7, 8, 10, 10, 10, 12, 15}) {
+			Propeller::AssertTrue(propeller << 'P' << A << i);
+		}
+
+		// put values to input b
+		for (__int32 i : {2, 3, 4, 5, 5, 5, 6, 7, 7, 9, 10, 11, 11, 13, 14, 15, 15, 15, 16}) {
+			Propeller::AssertTrue(propeller << 'P' << B << i);
+		}
+
+		// end flow on each input
+		propeller << 'E' << A;
+		propeller << 'E' << B;
+
+		// take value from fifo
+		std::vector<__int32> v;
+		__int32 success, value;
+		while (true) {
+			propeller << 'T';
+			propeller >> success >> value;
+			if (!success) break;
+			v.push_back(value);
+		}
+
+		Assert::IsTrue(v == std::vector<__int32>({ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16 }));
+	}
+
 };
