@@ -50,7 +50,32 @@ public:
 			hamming_numbers.push_back(value);
 		}
 
-		Assert::IsTrue(hamming_numbers == std::vector<__int32>({ 1, 2, 3, 4, 5, 6, 8, 9, 10, 12, 15, 16, 18, 20 }));
+		auto v = getHammingNumbers(20);
+		Assert::IsTrue(hamming_numbers == v);
+	}
+
+
+private:
+	
+	std::vector<__int32> getHammingNumbers(int max) {
+
+		std::vector<__int32> v {};
+		for (int i = 1; i <= max; i++) {
+			if (isHammingNumber(i)) {
+				v.push_back(i);
+			}
+		}
+		return v;
+	}
+
+	bool isHammingNumber(int n) {
+		return removeFactor(removeFactor(removeFactor(n, 5), 3), 2) == 1;
+	}
+
+	int removeFactor(int n, int factor) {
+		if (!n) return n;
+		while (n % factor == 0) n /= factor;
+		return n;
 	}
 
 };
