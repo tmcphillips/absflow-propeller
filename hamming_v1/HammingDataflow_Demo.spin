@@ -4,13 +4,9 @@ CON
   _clkmode      = xtal1 + pll16x
   _xinfreq      = 5_000_000
 
-  FIFO_DEPTH    = 100
-  OUTPUT_MAX    = 100
-  
-  
 OBJ
    
-  term  : "SerialConnection"
+  term   : "SerialConnection"
   hamming: "HammingDataflow"
 
 PUB Main | max_output, in, x, out, i, value

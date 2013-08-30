@@ -15,20 +15,19 @@ CON
   WORKFLOW_OUT_FIFO     = 8
     
 OBJ
-   
-  term          : "SerialConnection"
-  fifo[9]       : "LongFifo"
-  filtered_fork : "FilterThenForkActor"
-  times_2       : "ConstantMultiplierActor"
-  times_3       : "ConstantMultiplierActor"
-  times_5       : "ConstantMultiplierActor"
-  merge_2_3     : "OrderedMergeActor"
-  merge_2_3_5   : "OrderedMergeActor"
+
+  fifo[FIFO_COUNT] : "LongFifo"
+  filtered_fork    : "FilterThenForkActor"
+  times_2          : "ConstantMultiplierActor"
+  times_3          : "ConstantMultiplierActor"
+  times_5          : "ConstantMultiplierActor"
+  merge_2_3        : "OrderedMergeActor"
+  merge_2_3_5      : "OrderedMergeActor"
 
 VAR
 
-  long fifo_struct[FIFO_COUNT*fifo#STRUCT_SIZE]
-  long fifo_buffer[FIFO_COUNT*MAX_DEPTH]
+  long fifo_struct[ FIFO_COUNT * fifo#STRUCT_SIZE]
+  long fifo_buffer[ FIFO_COUNT * MAX_DEPTH]
   long filter_in
   long times_2_in
   long times_3_in
