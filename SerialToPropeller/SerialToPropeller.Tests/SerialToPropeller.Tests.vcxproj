@@ -90,6 +90,7 @@
     <ClCompile Include="ConstantMultiplierActorTests.cpp" />
     <ClCompile Include="FilterThenForkActorTests.cpp" />
     <ClCompile Include="ForkActorTests.cpp" />
+    <ClCompile Include="HammingDataflowTests.cpp" />
     <ClCompile Include="LongFifoTests.cpp" />
     <ClCompile Include="LowpassFilterActorTests.cpp" />
     <ClCompile Include="MergeActorTests.cpp" />
