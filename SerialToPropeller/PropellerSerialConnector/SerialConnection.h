@@ -18,21 +18,21 @@ namespace AbsFlow { namespace Propeller {
 		void writeBytes(const void* source, int count);
 
 		// shortcut methods for single-byte I/O
-		inline unsigned char readByte() { unsigned int b; readBytes(&b, 1); return b; }
-		inline void writeByte(unsigned char b) { writeBytes(&b, 1); }
+		unsigned char readByte() { unsigned int b; readBytes(&b, 1); return b; }
+		void writeByte(unsigned char b) { writeBytes(&b, 1); }
 
 		// put operators
-		inline SerialConnection& operator<<(unsigned char u) { writeByte(u); return *this; }
-		inline SerialConnection& operator<<(char c) { writeByte(c); return *this; }
-		inline SerialConnection& operator<<(__int16 i) { writeBytes(&i, 2); return *this; }
-		inline SerialConnection& operator<<(__int32 i) { writeBytes(&i, 4); return *this; }
-		inline SerialConnection& operator<<(std::string& s) { writeBytes(s.c_str(), s.size() + 1); return *this; }
+		SerialConnection& operator<<(unsigned char u) { writeByte(u); return *this; }
+		SerialConnection& operator<<(char c) { writeByte(c); return *this; }
+		SerialConnection& operator<<(__int16 i) { writeBytes(&i, 2); return *this; }
+		SerialConnection& operator<<(__int32 i) { writeBytes(&i, 4); return *this; }
+		SerialConnection& operator<<(std::string& s) { writeBytes(s.c_str(), s.size() + 1); return *this; }
 
 		// get operators
-		inline SerialConnection& operator>>(unsigned char& u) { u = readByte(); return *this; }
-		inline SerialConnection& operator>>(char& c)  { c = readByte(); return *this; }
-		inline SerialConnection& operator>>(__int16& i) { readBytes(&i, 2); return *this; }
-		inline SerialConnection& operator>>(__int32& i) { readBytes(&i, 4); return *this; }
+		SerialConnection& operator>>(unsigned char& u) { u = readByte(); return *this; }
+		SerialConnection& operator>>(char& c)  { c = readByte(); return *this; }
+		SerialConnection& operator>>(__int16& i) { readBytes(&i, 2); return *this; }
+		SerialConnection& operator>>(__int32& i) { readBytes(&i, 4); return *this; }
 		SerialConnection& operator>>(std::string& s);
 
 	private:
@@ -40,7 +40,11 @@ namespace AbsFlow { namespace Propeller {
 		// private fields
 		HANDLE _handle;
 
-		// private methods
+		// disallowed copy constructor and assignment operator
+		SerialConnection(const SerialConnection&);
+		SerialConnection& operator=(const SerialConnection&);
+
+		// private helper methods
 		void stringToWideChars(std::string source, WCHAR* destination);
 		void openSerialPort(WCHAR* portName);
 		void setPortParameters(DWORD baudRate, BYTE byteSize, BYTE stopBits, BYTE parity);
