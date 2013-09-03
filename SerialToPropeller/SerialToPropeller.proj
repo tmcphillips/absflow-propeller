@@ -16,16 +16,36 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Actor Include="FourwayForkActor"><Name>FourwayForkActor</Name></Actor>
-    <Actor Include="NondetermMergeActor"><Name>NondetermMergeActor</Name></Actor>
-    <Actor Include="FilterThenForkActor"><Name>FilterThenForkActor</Name></Actor>
-    <Actor Include="LongFifo"><Name>LongFifo</Name></Actor>
-    <Actor Include="HammingDataflow"><Name>HammingDataflow</Name></Actor>
-    <Actor Include="SerialConnection"><Name>SerialConnection</Name></Actor>
-    <Actor Include="BufferActor"><Name>BufferActor</Name></Actor>
-    <Actor Include="ConstantMultiplierActor"><Name>ConstantMultiplierActor</Name></Actor>
-    <Actor Include="LowpassFilterActor"><Name>LowpassFilterActor</Name></Actor>
-    <Actor Include="OrderedMergeActor"><Name>OrderedMergeActor</Name></Actor>
+    <Actor Include="Component">
+      <Name>FourwayForkActor</Name>
+    </Actor>
+    <Actor Include="Component">
+      <Name>NondetermMergeActor</Name>
+    </Actor>
+    <Actor Include="Component">
+      <Name>FilterThenForkActor</Name>
+    </Actor>
+    <Actor Include="Component">
+      <Name>LongFifo</Name>
+    </Actor>
+    <Actor Include="Component">
+      <Name>HammingDataflow</Name>
+    </Actor>
+    <Actor Include="Component">
+      <Name>SerialConnection</Name>
+    </Actor>
+    <Actor Include="Component">
+      <Name>BufferActor</Name>
+    </Actor>
+    <Actor Include="Component">
+      <Name>ConstantMultiplierActor</Name>
+    </Actor>
+    <Actor Include="Component">
+      <Name>LowpassFilterActor</Name>
+    </Actor>
+    <Actor Include="Component">
+      <Name>OrderedMergeActor</Name>
+    </Actor>
     <!--
     -->
   </ItemGroup>
