@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion ="4.0">
+
+  <PropertyGroup>
+    <SolutionFileName>SerialToPropeller.sln</SolutionFileName>
+  </PropertyGroup>
+  
+  <Target Name="BuildSolution">
+    <MSBuild Projects ="$(SolutionFileName)"
+             Properties = "Configuration=Debug"  />
+  </Target>
+
+  <PropertyGroup>
+    <SpinDirectory>C:\Users\tmcphillips\GitRepos\org-absflow\absflow-propeller\hamming_v1\</SpinDirectory>    
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Actor Include="FourwayForkActor"><Name>FourwayForkActor</Name></Actor>
+    <Actor Include="NondetermMergeActor"><Name>NondetermMergeActor</Name></Actor>
+    <Actor Include="FilterThenForkActor"><Name>FilterThenForkActor</Name></Actor>
+    <Actor Include="LongFifo"><Name>LongFifo</Name></Actor>
+    <Actor Include="HammingDataflow"><Name>HammingDataflow</Name></Actor>
+    <Actor Include="SerialConnection"><Name>SerialConnection</Name></Actor>
+    <Actor Include="BufferActor"><Name>BufferActor</Name></Actor>
+    <Actor Include="ConstantMultiplierActor"><Name>ConstantMultiplierActor</Name></Actor>
+    <Actor Include="LowpassFilterActor"><Name>LowpassFilterActor</Name></Actor>
+    <Actor Include="OrderedMergeActor"><Name>OrderedMergeActor</Name></Actor>
+    <!--
+    -->
+  </ItemGroup>
+      
+  <Target Name="BuildTestDrivers" Outputs="%(Actor.Name)" DependsOnTargets="BuildSolution">
+    
+    <Message Text="Testing %(Actor.Name)..." />
+
+    <Exec Command="bstc -d COM4 -p 0 C:\Users\tmcphillips\GitRepos\org-absflow\absflow-propeller\hamming_v1\%(Actor.Name)_TestDriver.spin" 
+          IgnoreExitCode="false" 
+          WorkingDirectory="$(OutputPath)"
+      />
+  
+    <Exec Command="sleep 1"/>    
+
+     <Exec Command="VSTest.Console.exe /tests:^%(Actor.Name)Tests Debug\SerialToPropeller.Tests.dll" 
+           IgnoreExitCode="true" 
+           WorkingDirectory="$(OutputPath)"
+    />
+  </Target>
+
+</Project>
