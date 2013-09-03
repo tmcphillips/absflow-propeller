@@ -8,7 +8,7 @@ CON
   
 OBJ
    
-  merge_actor   : "MergeActor"
+  merge_actor   : "NondetermMergeActor"
   input_1_fifo  : "LongFifo"
   input_2_fifo  : "LongFifo"
   output_fifo   : "LongFifo"
