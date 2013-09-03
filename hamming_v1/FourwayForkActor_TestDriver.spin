@@ -8,7 +8,7 @@ CON
   
 OBJ
    
-  fork_actor     : "ForkActor"
+  fork_actor     : "FourwayForkActor"
   input_fifo     : "LongFifo"
   output_1_fifo  : "LongFifo"
   output_2_fifo  : "LongFifo"

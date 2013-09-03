@@ -1,14 +1,9 @@
 #include "stdafx.h"
-#include "CppUnitTest.h"
-
-#include "SerialConnection.h" 
-#include "PropAssert.h"
-
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 using namespace AbsFlow;
 	
-TEST_CLASS(ForkActorTests)
+TEST_CLASS(FourwayForkActorTests)
 {
 
 private:
@@ -29,7 +24,7 @@ private:
 
 public:
 
-	ForkActorTests() : propeller("COM4") {}
+	FourwayForkActorTests() : propeller("COM4") {}
 
 	TEST_METHOD_CLEANUP(TestCleanup)
 	{
