@@ -71,6 +71,8 @@ PUB Main | i, value, input_fifo_depth, output_fifo_1_depth, output_fifo_2_depth,
       "P":  'Put long to input fifo
         term.ReadLong(@value)
         term.WriteLong(input_fifo.Push(value))
+
+      "T":
         term.ReadLong(@option)
         case option
           1:
@@ -82,7 +84,7 @@ PUB Main | i, value, input_fifo_depth, output_fifo_1_depth, output_fifo_2_depth,
           4:
             term.WriteLong(output_4_fifo.Pop(@value))
 
-        term.WriteLong(@value)
+        term.WriteLong(value)
 
         
       "E":  'Signal end of flow
