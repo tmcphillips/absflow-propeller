@@ -1,4 +1,4 @@
-
+#include "stdafx.h"
 #include "SerialConnection.h"
 
 namespace AbsFlow { namespace Propeller {

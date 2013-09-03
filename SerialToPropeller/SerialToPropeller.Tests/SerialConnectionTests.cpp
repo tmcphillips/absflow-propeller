@@ -1,13 +1,9 @@
 #include "stdafx.h"
-#include "CppUnitTest.h"
-
-#include "SerialConnection.h"
-#include "PropAssert.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 using namespace AbsFlow;
 
-TEST_CLASS(SerialToPropellerTests)
+TEST_CLASS(SerialConnectionTests)
 {
 private:
 
@@ -15,7 +11,7 @@ private:
 
 public:
 
-	SerialToPropellerTests() : propeller("COM4") {}
+	SerialConnectionTests() : propeller("COM4") {}
 
 	TEST_METHOD(TestStringPutGet) {
 		std::string stringToSend = "Hello!";

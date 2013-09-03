@@ -8,7 +8,8 @@
 #include "targetver.h"
 
 // Headers for CppUnitTest
-#include "CppUnitTest.h"
+#include "CppUnitTest.h" 
 
 // TODO: reference additional headers your program requires here
 #include "SerialConnection.h"  
+#include "PropAssert.h"

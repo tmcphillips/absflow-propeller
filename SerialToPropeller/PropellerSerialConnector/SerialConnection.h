@@ -34,7 +34,6 @@ namespace AbsFlow { namespace Propeller {
 		SerialConnection& operator>>(__int16& i) { readBytes(&i, 2); return *this; }
 		SerialConnection& operator>>(__int32& i) { readBytes(&i, 4); return *this; }
 		SerialConnection& operator>>(std::string& s);
-
 	private:
 	 
 		// private fields
