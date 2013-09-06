@@ -65,8 +65,8 @@ PUB Main | i, depth, f, value
         term.WriteLong(true)
 
       "W":  'Wait for input queues to empty
-        repeat f from A to B
-          repeat while long[@fifo_struct[f*fifo#STRUCT_SIZE]][fifo#OCCUPANCY_OFFSET] > 0
+        repeat while fifo[A].Size > 0
+        repeat while fifo[B].Size > 0
         term.WriteLong(true)
   
       "Q":  'Query fifo data structure f

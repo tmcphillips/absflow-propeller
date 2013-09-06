@@ -86,8 +86,8 @@ PUB Main | i, v, input_fifo_1_depth, input_fifo_2_depth, output_fifo_depth, opti
         term.WriteLong(true)
 
       "W":  'Wait for input queues to empty
-        repeat while long[@input_fifo_1_struct][output_fifo#OCCUPANCY_OFFSET] > 0
-        repeat while long[@input_fifo_2_struct][output_fifo#OCCUPANCY_OFFSET] > 0
+        repeat while input_1_fifo.Size > 0
+        repeat while input_2_fifo.Size > 0
         term.WriteLong(true)
   
       "Q":  'Query fifo data structure

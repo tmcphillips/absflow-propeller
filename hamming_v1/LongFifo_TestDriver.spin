@@ -4,7 +4,7 @@ CON
   _clkmode      = xtal1 + pll16x
   _xinfreq      = 5_000_000
 
-  FIFO_MAX_DEPTH = 1024
+  FIFO_MAX_CAPACITY = 1024
   
 OBJ
    
@@ -14,9 +14,9 @@ OBJ
 VAR
 
   long fifo_struct[fifo#STRUCT_SIZE]
-  long fifo_buffer[FIFO_MAX_DEPTH]
+  long fifo_buffer[FIFO_MAX_CAPACITY]
 
-PUB Main | i, sem_id, fifo_depth, value
+PUB Main | i, sem_id, fifo_capacity, value
 
   term.Start(115_200)
   sem_id := locknew
@@ -26,8 +26,8 @@ PUB Main | i, sem_id, fifo_depth, value
     case term.CharIn
 
       "I":  'Initialize fifo of requested size
-        term.ReadLong(@fifo_depth)
-        fifo.Initialize(@fifo_struct, @fifo_buffer, fifo_depth, sem_id)
+        term.ReadLong(@fifo_capacity)
+        fifo.Initialize(@fifo_struct, @fifo_buffer, fifo_capacity, sem_id)
         term.WriteLong(true)
         
       "P":  'Put long to fifo

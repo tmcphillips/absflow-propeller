@@ -60,7 +60,7 @@ PUB Main | i, value, input_fifo_depth, output_fifo_depth
         term.WriteLong(true)
 
       "W":  'Wait for input queue to empty
-        repeat while long[@input_fifo_struct][input_fifo#OCCUPANCY_OFFSET] > 0
+        repeat while input_fifo.Size > 0
        term.WriteLong(true)
   
       "Q":  'Query fifo data structure
