@@ -13,11 +13,11 @@ VAR
   
 pub Start(input_base, output_1_base, output_2_base, output_3_base, output_4_base) : success
   stop
-  _input_fifo.SetBaseAddress(input_base)
-  _output_1_fifo.SetBaseAddress(output_1_base)
-  _output_2_fifo.SetBaseAddress(output_2_base)
-  _output_3_fifo.SetBaseAddress(output_3_base)
-  _output_4_fifo.SetBaseAddress(output_4_base)
+  _input_fifo.Base(input_base)
+  _output_1_fifo.Base(output_1_base)
+  _output_2_fifo.Base(output_2_base)
+  _output_3_fifo.Base(output_3_base)
+  _output_4_fifo.Base(output_4_base)
   running := true
   success := (cog := cognew(Run, @stack) + 1)
 

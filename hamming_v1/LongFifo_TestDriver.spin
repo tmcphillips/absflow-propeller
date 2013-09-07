@@ -27,7 +27,7 @@ PUB Main | i, sem_id, fifo_capacity, value
 
       "I":  'Initialize fifo of requested size
         term.ReadLong(@fifo_capacity)
-        fifo.Initialize(@fifo_struct, @fifo_buffer, fifo_capacity, sem_id)
+        fifo.Create(@fifo_struct, @fifo_buffer, fifo_capacity, sem_id)
         term.WriteLong(true)
         
       "P":  'Put long to fifo
@@ -42,7 +42,7 @@ PUB Main | i, sem_id, fifo_capacity, value
         fifo.EndFlow
 
       "F":  'Check if flow has ended
-        term.WriteLong(fifo.FlowEnded)  
+        term.WriteLong(fifo.EOF)  
 
       "Q":  'Query fifo data structure
         repeat i from 0 to 15

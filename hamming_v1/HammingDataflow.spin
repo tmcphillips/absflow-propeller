@@ -51,7 +51,7 @@ PUB Initialize(fifo_depths) | i, f, max_output_value, value
   workflow_out     := @fifo_struct[ WORKFLOW_OUT_FIFO     * fifo#STRUCT_SIZE ]
 
   repeat f from 0 to FIFO_COUNT - 1                                                                   
-    fifo[f].Initialize(@fifo_struct[f*fifo#STRUCT_SIZE], @fifo_buffer[f*MAX_DEPTH], fifo_depths, 0) 
+    fifo[f].Create(@fifo_struct[f*fifo#STRUCT_SIZE], @fifo_buffer[f*MAX_DEPTH], fifo_depths, 0) 
     
 
 Pub Begin(max_output_value)

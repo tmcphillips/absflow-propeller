@@ -11,9 +11,9 @@ VAR
   
 pub Start(input_1_base, input_2_base, output_base) : success
   stop
-  _input_1.SetBaseAddress(input_1_base)
-  _input_2.SetBaseAddress(input_2_base)
-  _output.SetBaseAddress(output_base)
+  _input_1.Base(input_1_base)
+  _input_2.Base(input_2_base)
+  _output.Base(output_base)
   running := true
   success := (cog := cognew(Run, @stack) + 1)
 

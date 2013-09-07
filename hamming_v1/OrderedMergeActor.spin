@@ -11,9 +11,9 @@ VAR
   
 pub Start(base_a, base_b, base_c) : success
   stop
-  fifo_a.SetBaseAddress(base_a)
-  fifo_b.SetBaseAddress(base_b)
-  fifo_c.SetBaseAddress(base_c)
+  fifo_a.Base(base_a)
+  fifo_b.Base(base_b)
+  fifo_c.Base(base_c)
   running := true
   success := (cog := cognew(Run, @stack) + 1)
 

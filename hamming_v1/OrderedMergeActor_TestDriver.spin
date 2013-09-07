@@ -38,7 +38,7 @@ PUB Main | i, depth, f, value
 
         repeat f from A to C
           term.ReadLong(@depth)                                                                     
-          fifo[f].Initialize(@fifo_struct[f*fifo#STRUCT_SIZE], @fifo_buffer[f*MAX_DEPTH], depth, sem[f]) 
+          fifo[f].Create(@fifo_struct[f*fifo#STRUCT_SIZE], @fifo_buffer[f*MAX_DEPTH], depth, sem[f]) 
         
         term.WriteLong(actor.Start(@fifo_struct[A*fifo#STRUCT_SIZE],@fifo_struct[B*fifo#STRUCT_SIZE],@fifo_struct[C*fifo#STRUCT_SIZE]))
         
@@ -56,7 +56,7 @@ PUB Main | i, depth, f, value
         fifo[f].EndFlow                  
     
       "F":  'Check if output flow has ended
-        term.WriteLong(fifo[C].FlowEnded)
+        term.WriteLong(fifo[C].EOF)
 
       "D":  'Destroy actor
         fifo[A].EndFlow

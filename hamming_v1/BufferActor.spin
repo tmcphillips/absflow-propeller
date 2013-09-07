@@ -10,8 +10,8 @@ VAR
   
 pub Start(input_fifo_base, output_fifo_base) : success
   'stop
-  _input_fifo.SetBaseAddress(input_fifo_base)
-  _output_fifo.SetBaseAddress(output_fifo_base)
+  _input_fifo.Base(input_fifo_base)
+  _output_fifo.Base(output_fifo_base)
   running := true
   success := (cog := cognew(Run, @stack) + 1)
 

@@ -61,11 +61,11 @@ PUB Main | i, value, input_fifo_depth, output_fifo_1_depth, output_fifo_2_depth,
         term.ReadLong(@output_fifo_4_depth)
         term.ReadLong(@cutoff_value)
         term.ReadLong(@shutdown_on_overage)                          
-        input_fifo.Initialize(@input_fifo_struct, @input_fifo_buffer, input_fifo_depth, input_sem_id)
-        output_1_fifo.Initialize(@output_fifo_1_struct, @output_fifo_1_buffer, output_fifo_1_depth, output_1_sem_id)
-        output_2_fifo.Initialize(@output_fifo_2_struct, @output_fifo_2_buffer, output_fifo_2_depth, output_2_sem_id)
-        output_3_fifo.Initialize(@output_fifo_3_struct, @output_fifo_3_buffer, output_fifo_3_depth, output_3_sem_id)
-        output_4_fifo.Initialize(@output_fifo_4_struct, @output_fifo_4_buffer, output_fifo_4_depth, output_4_sem_id)
+        input_fifo.Create(@input_fifo_struct, @input_fifo_buffer, input_fifo_depth, input_sem_id)
+        output_1_fifo.Create(@output_fifo_1_struct, @output_fifo_1_buffer, output_fifo_1_depth, output_1_sem_id)
+        output_2_fifo.Create(@output_fifo_2_struct, @output_fifo_2_buffer, output_fifo_2_depth, output_2_sem_id)
+        output_3_fifo.Create(@output_fifo_3_struct, @output_fifo_3_buffer, output_fifo_3_depth, output_3_sem_id)
+        output_4_fifo.Create(@output_fifo_4_struct, @output_fifo_4_buffer, output_fifo_4_depth, output_4_sem_id)
         term.WriteLong(actor.Start(@input_fifo_struct, @output_fifo_1_struct, @output_fifo_2_struct, @output_fifo_3_struct, @output_fifo_4_struct, cutoff_value, shutdown_on_overage))
         
       "P":  'Put long to input fifo
@@ -91,10 +91,10 @@ PUB Main | i, value, input_fifo_depth, output_fifo_1_depth, output_fifo_2_depth,
         input_fifo.EndFlow
 
       "F":  'Check if output flow has ended
-        term.WriteLong(output_1_fifo.FlowEnded)
-        term.WriteLong(output_2_fifo.FlowEnded)
-        term.WriteLong(output_3_fifo.FlowEnded)
-        term.WriteLong(output_4_fifo.FlowEnded)
+        term.WriteLong(output_1_fifo.EOF)
+        term.WriteLong(output_2_fifo.EOF)
+        term.WriteLong(output_3_fifo.EOF)
+        term.WriteLong(output_4_fifo.EOF)
 
       "D":  'Destroy actor
         input_fifo.EndFlow

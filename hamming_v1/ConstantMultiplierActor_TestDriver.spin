@@ -37,8 +37,8 @@ PUB Main | i, value, input_fifo_depth, output_fifo_depth, multiplier
         term.ReadLong(@input_fifo_depth)
         term.ReadLong(@output_fifo_depth)
         term.ReadLong(@multiplier)
-        input_fifo.Initialize(@input_fifo_struct, @input_fifo_buffer,input_fifo_depth, input_sem_id)
-        output_fifo.Initialize(@output_fifo_struct, @output_fifo_buffer, output_fifo_depth, output_sem_id)
+        input_fifo.Create(@input_fifo_struct, @input_fifo_buffer,input_fifo_depth, input_sem_id)
+        output_fifo.Create(@output_fifo_struct, @output_fifo_buffer, output_fifo_depth, output_sem_id)
         term.WriteLong(actor.Start(@input_fifo_struct, @output_fifo_struct, multiplier))
         
       "P":  'Put long to input fifo
@@ -53,7 +53,7 @@ PUB Main | i, value, input_fifo_depth, output_fifo_depth, multiplier
         input_fifo.EndFlow
 
       "F":  'Check if output flow has ended
-        term.WriteLong(output_fifo.FlowEnded)
+        term.WriteLong(output_fifo.EOF)
 
       "D":  'Destroy actor
         input_fifo.EndFlow
