@@ -16,47 +16,53 @@ CON
   
 VAR
 
-  'addresses of shared variables
+  'pointers to shared variables
   long p_p_back
   long p_p_front
   long p_size
-  long p_flow_ended
+  long p_eof
 
   'local copies of shared constants
-  long buffer_start
-  long buffer_end
+  long p_buffer_start
+  long p_buffer_end
   long capacity  
   long sem_id
         
-PUB Initialize(base_address, buffer_address, fifo_capacity, semaphore_id)
+PUB Create(p_base, p_buffer, fifo_capacity, semaphore_id)
 
-  'initialize shared constants
-  long[base_address][BUFFER_START_OFFSET] := buffer_address
-  long[base_address][BUFFER_END_OFFSET]   := buffer_address + fifo_capacity * FIFO_WIDTH - 1
-  long[base_address][CAPACITY_OFFSET]     := fifo_capacity
-  long[base_address][SEM_ID_OFFSET]       := semaphore_id
-         
-  SetBaseAddress(base_address)
+  ' configure local pointers to shared variables 
+  InitializeLocalPointers(p_base)
+                                                 
+  ' initialize shared variables through the local pointers
+  long[p_size]    := 0
+  long[p_eof]     := FALSE
+  long[p_p_back]  := p_buffer
+  long[p_p_front] := p_buffer
+    
+  'initialize shared constants and load local variables with copies of their values
+  p_buffer_start := long[p_base][BUFFER_START_OFFSET] := p_buffer
+  p_buffer_end   := long[p_base][BUFFER_END_OFFSET]   := p_buffer + fifo_capacity * FIFO_WIDTH - 1  
+  capacity       := long[p_base][CAPACITY_OFFSET]     := fifo_capacity
+  sem_id         := long[p_base][SEM_ID_OFFSET]       := semaphore_id
+    
 
-  ' initialize shared variables
-  long[p_size]       := 0
-  long[p_flow_ended] := FALSE
-  long[p_p_back]     := buffer_address
-  long[p_p_front]    := buffer_address
+PUB Base(p_base)
 
+  ' configure local pointers to shared variables
+  InitializeLocalPointers(p_base)
 
-PUB SetBaseAddress(base_address)
+  'load local variables with copies of shared constants
+  p_buffer_start := long[p_base][BUFFER_START_OFFSET]
+  p_buffer_end   := long[p_base][BUFFER_END_OFFSET]
+  capacity       := long[p_base][CAPACITY_OFFSET] 
+  sem_id         := long[p_base][SEM_ID_OFFSET]
 
-  buffer_start := long[base_address][BUFFER_START_OFFSET]
-  buffer_end   := long[base_address][BUFFER_END_OFFSET]
-  capacity     := long[base_address][CAPACITY_OFFSET] 
-  sem_id       := long[base_address][SEM_ID_OFFSET]
-      
-  p_size       := @long[base_address][SIZE_OFFSET]
-  p_flow_ended := @long[base_address][EOF_OFFSET]
-  p_p_back     := @long[base_address][BACK_OFFSET]
-  p_p_front    := @long[base_address][FRONT_OFFSET]
-
+  
+PRI InitializeLocalPointers(p_base)
+  p_size    := @long[p_base][SIZE_OFFSET]
+  p_eof     := @long[p_base][EOF_OFFSET]
+  p_p_back  := @long[p_base][BACK_OFFSET]
+  p_p_front := @long[p_base][FRONT_OFFSET]
 
     
 PUB Push(value) | p_back
@@ -64,7 +70,7 @@ PUB Push(value) | p_back
   
     repeat until not lockset(sem_id)                    ' lock access to shared fifo data structure
                            
-    if (long[p_flow_ended])                             ' release lock and report failure if flow has ended
+    if (long[p_eof])                                    ' release lock and report failure if flow has ended
       lockclr(sem_id)
       return FALSE
       
@@ -78,8 +84,8 @@ PUB Push(value) | p_back
     long[p_back] := value                             ' store the value in the back element
     p_back += FIFO_WIDTH                              ' point to next element
      
-    if (p_back > buffer_end)                          ' update shared pointer to back element
-      long[p_p_back] := buffer_start
+    if (p_back > p_buffer_end)                        ' update shared pointer to back element
+      long[p_p_back] := p_buffer_start
     else
       long[p_p_back] := p_back
         
@@ -94,7 +100,7 @@ PUB Pop(p_result) | p_front
 
     if long[p_size] == 0
 
-      if long[p_flow_ended]
+      if long[p_eof]
         lockclr(sem_id)
         return FALSE
 
@@ -107,8 +113,8 @@ PUB Pop(p_result) | p_front
     p_front += FIFO_WIDTH
     long[p_size]--
      
-    if (p_front > buffer_end)
-      long[p_p_front] := buffer_start
+    if (p_front > p_buffer_end)
+      long[p_p_front] := p_buffer_start
     else
       long[p_p_front] := p_front
       
@@ -117,13 +123,13 @@ PUB Pop(p_result) | p_front
 
 PUB EndFlow
   repeat until not lockset(sem_id)
-  long[p_flow_ended] := TRUE
+  long[p_eof] := TRUE
   lockclr(sem_id)
 
 PUB Size
   return long[p_size]
 
-Pub FlowEnded
+Pub EOF
   repeat until not lockset(sem_id)
-  result := long[p_flow_ended]
+  result := long[p_eof]
   lockclr(sem_id)
