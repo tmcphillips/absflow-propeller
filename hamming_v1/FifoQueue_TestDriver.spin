@@ -9,7 +9,7 @@ CON
 OBJ
    
   term  : "SerialConnection"
-  fifo  : "LongFifo"
+  fifo  : "FifoQueue"
 
 VAR
 

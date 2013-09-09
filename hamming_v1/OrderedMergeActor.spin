@@ -1,8 +1,8 @@
 OBJ
    
-  fifo_a : "LongFifo"
-  fifo_b : "LongFifo"
-  fifo_c : "LongFifo"
+  fifo_a : "FifoQueue"
+  fifo_b : "FifoQueue"
+  fifo_c : "FifoQueue"
    
 VAR
   byte cog

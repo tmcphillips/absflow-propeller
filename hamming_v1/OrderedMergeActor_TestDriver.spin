@@ -14,7 +14,7 @@ OBJ
    
   term    : "SerialConnection"
   actor   : "OrderedMergeActor"
-  fifo[3] : "LongFifo"
+  fifo[3] : "FifoQueue"
 
 VAR
   

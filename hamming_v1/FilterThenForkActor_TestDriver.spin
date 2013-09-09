@@ -9,11 +9,11 @@ CON
 OBJ
    
   actor          : "FilterThenForkActor"
-  input_fifo     : "LongFifo"
-  output_1_fifo  : "LongFifo"
-  output_2_fifo  : "LongFifo"
-  output_3_fifo  : "LongFifo"
-  output_4_fifo  : "LongFifo"
+  input_fifo     : "FifoQueue"
+  output_1_fifo  : "FifoQueue"
+  output_2_fifo  : "FifoQueue"
+  output_3_fifo  : "FifoQueue"
+  output_4_fifo  : "FifoQueue"
   term           : "SerialConnection"
 
 VAR

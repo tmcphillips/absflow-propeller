@@ -16,7 +16,7 @@ CON
     
 OBJ
 
-  fifo[FIFO_COUNT] : "LongFifo"
+  fifo[FIFO_COUNT] : "FifoQueue"
   filtered_fork    : "FilterThenForkActor"
   times_2          : "ConstantMultiplierActor"
   times_3          : "ConstantMultiplierActor"

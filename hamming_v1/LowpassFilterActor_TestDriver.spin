@@ -9,8 +9,8 @@ CON
 OBJ
    
   actor : "LowpassFilterActor"
-  input_fifo   : "LongFifo"
-  output_fifo  : "LongFifo"
+  input_fifo   : "FifoQueue"
+  output_fifo  : "FifoQueue"
   term         : "SerialConnection"
 
 VAR

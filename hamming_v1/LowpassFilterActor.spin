@@ -1,7 +1,7 @@
 OBJ
    
-  _input_fifo   : "LongFifo"
-  _output_fifo  : "LongFifo"
+  _input_fifo   : "FifoQueue"
+  _output_fifo  : "FifoQueue"
    
 VAR
   byte cog

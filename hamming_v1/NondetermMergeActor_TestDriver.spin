@@ -9,9 +9,9 @@ CON
 OBJ
    
   merge_actor   : "NondetermMergeActor"
-  input_1_fifo  : "LongFifo"
-  input_2_fifo  : "LongFifo"
-  output_fifo   : "LongFifo"
+  input_1_fifo  : "FifoQueue"
+  input_2_fifo  : "FifoQueue"
+  output_fifo   : "FifoQueue"
   term          : "SerialConnection"
 
 VAR

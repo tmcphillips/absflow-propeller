@@ -91,7 +91,7 @@
     <ClCompile Include="FilterThenForkActorTests.cpp" />
     <ClCompile Include="FourwayForkActorTests.cpp" />
     <ClCompile Include="HammingDataflowTests.cpp" />
-    <ClCompile Include="LongFifoTests.cpp" />
+    <ClCompile Include="FifoQueueTests.cpp" />
     <ClCompile Include="LowpassFilterActorTests.cpp" />
     <ClCompile Include="NondetermMergeActorTests.cpp" />
     <ClCompile Include="OrderedMergerActorTests.cpp" />
