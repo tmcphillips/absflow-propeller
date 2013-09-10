@@ -21,15 +21,14 @@ private:
 	};
 
 	fifo_state state;
-	AbsFlow::Propeller::SerialConnection propeller;
 
 	static const int A = 0;
 	static const int B = 1;
 	static const int C = 2;
 
-public:
+	Propeller::SerialConnection propeller{ "COM4" };
 
-	OrderedMergeActorTests() : propeller("COM4") {}
+public:
 
 	TEST_METHOD_CLEANUP(TestCleanup)
 	{

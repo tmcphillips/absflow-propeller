@@ -17,11 +17,9 @@ private:
 	}; 
 
 	fifo_state state;
-	AbsFlow::Propeller::SerialConnection propeller;
+	Propeller::SerialConnection propeller{ "COM4" };
 
 public:
-	
-	FifoQueueTests() : propeller("COM4") {}
 
 	TEST_METHOD(TestInitializeFifo)
 	{

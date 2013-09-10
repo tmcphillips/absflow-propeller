@@ -21,11 +21,9 @@ private:
 	};
 
 	fifo_state state;
-	AbsFlow::Propeller::SerialConnection propeller;
+	Propeller::SerialConnection propeller{ "COM4" };
 
 public:
-
-	HammingDataflowTests() : propeller("COM4") {}
 
 	TEST_METHOD_CLEANUP(TestCleanup)
 	{

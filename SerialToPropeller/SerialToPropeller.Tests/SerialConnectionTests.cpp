@@ -5,13 +5,12 @@ using namespace AbsFlow;
 
 TEST_CLASS(SerialConnectionTests)
 {
+
 private:
 
-	Propeller::SerialConnection propeller;
+	Propeller::SerialConnection propeller{ "COM4" };
 
 public:
-
-	SerialConnectionTests() : propeller("COM4") {}
 
 	TEST_METHOD(TestStringPutGet) {
 		std::string stringToSend = "Hello!";
@@ -28,7 +27,6 @@ public:
 		propeller >> c;
 		Assert::AreEqual('x', c);
 	}
-
 
 	TEST_METHOD(Test_PutInt32_GetInt32) {
 		__int32 x;

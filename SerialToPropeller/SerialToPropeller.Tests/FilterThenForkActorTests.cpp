@@ -20,11 +20,9 @@ private:
 	};
 
 	fifo_state state;
-	AbsFlow::Propeller::SerialConnection propeller;
+	Propeller::SerialConnection propeller{ "COM4" };
 
 public:
-
-	FilterThenForkActorTests() : propeller("COM4") {}
 
 	TEST_METHOD_CLEANUP(TestCleanup)
 	{
