@@ -93,6 +93,7 @@
     <ClCompile Include="HammingDataflowTests.cpp" />
     <ClCompile Include="FifoQueueTests.cpp" />
     <ClCompile Include="LowpassFilterActorTests.cpp" />
+    <ClCompile Include="MemoryPoolTests.cpp" />
     <ClCompile Include="NondetermMergeActorTests.cpp" />
     <ClCompile Include="OrderedMergerActorTests.cpp" />
     <ClCompile Include="stdafx.cpp">
