@@ -34,14 +34,15 @@ namespace AbsFlow { namespace Propeller {
 		SerialConnection& operator>>(__int16& i) { readBytes(&i, 2); return *this; }
 		SerialConnection& operator>>(__int32& i) { readBytes(&i, 4); return *this; }
 		SerialConnection& operator>>(std::string& s);
+
+		// disallowed copy constructor and assignment operator
+		SerialConnection(const SerialConnection&) = delete;
+		SerialConnection& operator=(const SerialConnection&) = delete;
+
 	private:
 	 
 		// private fields
 		HANDLE _handle;
-
-		// disallowed copy constructor and assignment operator
-		SerialConnection(const SerialConnection&);
-		SerialConnection& operator=(const SerialConnection&);
 
 		// private helper methods
 		void stringToWideChars(std::string source, WCHAR* destination);
