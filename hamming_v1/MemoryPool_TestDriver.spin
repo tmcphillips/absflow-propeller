@@ -13,8 +13,9 @@ OBJ
 
 VAR
 
-  byte pool_memory[MAX_POOL_SIZE_IN_BYTES]
   long pool_metadata[pool#METADATA_SIZE]
+  byte pool_memory[MAX_POOL_SIZE_IN_BYTES]
+
 
 
 PUB Main | p_pool, capacity_bytes, sem_id, requested_bytes
@@ -39,15 +40,16 @@ PUB Main | p_pool, capacity_bytes, sem_id, requested_bytes
         term.WriteLong(pool_metadata[pool#SEM_ID_OFFSET])
         
       "C":  'Get capacity of memory pool
-        term.WriteLong(pool_metadata[pool#CAPACITY_OFFSET])
-        
+        term.WriteLong(pool_metadata[pool#CAPACITY_OFFSET])       
+
+      "S":  'Get current size of memory pool (total allocated memory)
+        term.WriteLong(pool_metadata[pool#SIZE_OFFSET])
+
       "P":  'Get pool start address
         term.WriteLong(pool_metadata[pool#POOL_START_OFFSET])
 
       "N":  'Get address of next memory allocation
         term.WriteLong(pool_metadata[pool#NEXT_OFFSET])
 
-      "S":  'Get current size of memory pool (total allocated memory)
-        term.WriteLong(pool_metadata[pool#SIZE_OFFSET])
 
                 
