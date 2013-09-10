@@ -3,7 +3,7 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion ="4.0" DefaultTargets="BuildTestDrivers">
 
   <PropertyGroup>
-    <SolutionFileName>SerialToPropeller.sln</SolutionFileName>
+    <SolutionFileName>PropellerApplications.sln</SolutionFileName>
   </PropertyGroup>
   
   <Target Name="BuildSolution">
