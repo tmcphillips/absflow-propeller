@@ -4,30 +4,35 @@ CON
   _clkmode      = xtal1 + pll16x
   _xinfreq      = 5_000_000
 
-  FIFO_MAX_CAPACITY = 1024
-  
+  MEMORY_POOL_SIZE = 1024
+    
 OBJ
    
   term  : "SerialConnection"
   fifo  : "FifoQueue"
+  pool  : "MemoryPool"
 
 VAR
 
+  long pool_metadata[pool#METADATA_SIZE]
+  byte pool_memory[MEMORY_POOL_SIZE]
+  
   long fifo_struct[fifo#STRUCT_SIZE]
-  long fifo_buffer[FIFO_MAX_CAPACITY]
 
-PUB Main | i, sem_id, fifo_capacity, value
+PUB Main | i, sem_id, fifo_capacity, value, p_fifo_buffer
 
   term.Start(115_200)
   sem_id := locknew
-  
+  pool.Create(@pool_metadata, @pool_memory, MEMORY_POOL_SIZE, sem_id)    
+
   repeat
                     
     case term.CharIn
 
       "I":  'Initialize fifo of requested size
         term.ReadLong(@fifo_capacity)
-        fifo.Create(@fifo_struct, @fifo_buffer, fifo_capacity, sem_id)
+        p_fifo_buffer := pool.Allocate(fifo_capacity * 4)
+        fifo.Create(@fifo_struct, p_fifo_buffer, fifo_capacity, sem_id)
         term.WriteLong(true)
         
       "P":  'Put long to fifo

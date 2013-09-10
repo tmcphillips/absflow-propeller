@@ -13,7 +13,7 @@ CON
   FRONT_OFFSET        = 5
   BUFFER_START_OFFSET = 6
   BUFFER_END_OFFSET   = 7
-  
+
 VAR
 
   'pointers to shared variables
