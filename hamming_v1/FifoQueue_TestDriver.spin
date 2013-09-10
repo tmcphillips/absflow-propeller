@@ -15,7 +15,7 @@ OBJ
 VAR
 
   long pool_metadata[pool#METADATA_SIZE]
-  byte pool_memory[MEMORY_POOL_BYTES]
+  byte pool_data[MEMORY_POOL_BYTES]
   
   long fifo_struct[fifo#STRUCT_SIZE]
 
@@ -29,7 +29,7 @@ PUB Main | i, sem_id, fifo_capacity, value, p_fifo_buffer
     case term.CharIn
 
       "I":  'Initialize fifo of requested size
-        pool.Create(@pool_metadata, @pool_memory, MEMORY_POOL_BYTES, sem_id)  
+        pool.Create(@pool_metadata, @pool_data, MEMORY_POOL_BYTES, sem_id)  
         term.ReadLong(@fifo_capacity)
         p_fifo_buffer := pool.Allocate(fifo_capacity * 4)
         if (p_fifo_buffer == 0)

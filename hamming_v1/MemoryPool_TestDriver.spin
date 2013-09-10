@@ -14,9 +14,7 @@ OBJ
 VAR
 
   long pool_metadata[pool#METADATA_SIZE]
-  byte pool_memory[MAX_POOL_SIZE_IN_BYTES]
-
-
+  byte pool_data[MAX_POOL_SIZE_IN_BYTES]
 
 PUB Main | p_pool, capacity_bytes, sem_id, requested_bytes
 
@@ -29,7 +27,7 @@ PUB Main | p_pool, capacity_bytes, sem_id, requested_bytes
 
       "I":  'Initialize memory pool
         term.ReadLong(@capacity_bytes)
-        pool.Create(@pool_metadata, @pool_memory, capacity_bytes, sem_id)
+        pool.Create(@pool_metadata, @pool_data, capacity_bytes, sem_id)
         term.WriteLong(true)
         
       "A":  'Allocate memory block of requested size
