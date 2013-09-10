@@ -4,7 +4,7 @@ CON
   _clkmode      = xtal1 + pll16x
   _xinfreq      = 5_000_000
 
-  MEMORY_POOL_SIZE = 1024
+  MEMORY_POOL_BYTES = 4096
     
 OBJ
    
@@ -15,26 +15,28 @@ OBJ
 VAR
 
   long pool_metadata[pool#METADATA_SIZE]
-  byte pool_memory[MEMORY_POOL_SIZE]
+  byte pool_memory[MEMORY_POOL_BYTES]
   
   long fifo_struct[fifo#STRUCT_SIZE]
 
 PUB Main | i, sem_id, fifo_capacity, value, p_fifo_buffer
 
   term.Start(115_200)
-  sem_id := locknew
-  pool.Create(@pool_metadata, @pool_memory, MEMORY_POOL_SIZE, sem_id)    
+  sem_id := locknew  
 
   repeat
                     
     case term.CharIn
 
       "I":  'Initialize fifo of requested size
+        pool.Create(@pool_metadata, @pool_memory, MEMORY_POOL_BYTES, sem_id)  
         term.ReadLong(@fifo_capacity)
         p_fifo_buffer := pool.Allocate(fifo_capacity * 4)
+        if (p_fifo_buffer == 0)
+          term.WriteLong(false)
         fifo.Create(@fifo_struct, p_fifo_buffer, fifo_capacity, sem_id)
-        term.WriteLong(true)
-        
+        term.WriteLong(true) 
+         
       "P":  'Put long to fifo
         term.ReadLong(@value)
         term.WriteLong(fifo.Push(value))                
